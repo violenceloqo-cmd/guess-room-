@@ -20,12 +20,19 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
   const env = getEnv();
   const { engine } = built;
 
-  const app = Fastify({ logger: false });
+  // `trustProxy` makes Fastify read the client IP from X-Forwarded-For when
+  // behind nginx / a load balancer / Cloudflare. Without it, every request
+  // looks like it comes from the proxy's single IP, so all viewers share one
+  // rate-limit bucket and trip 429s as soon as a few people watch the stream.
+  const app = Fastify({ logger: false, trustProxy: true });
 
   await app.register(cors, { origin: true });
+  // Register the plugin but DON'T apply it globally — the frontend polls
+  // GET /state every ~1.5s (~40 req/min per viewer), which would blow a global
+  // budget instantly. We attach a strict limit only to the mutating /guess
+  // route below; reads stay unlimited.
   await app.register(rateLimit, {
-    max: 120,
-    timeWindow: "1 minute",
+    global: false,
     allowList: [],
   });
 
@@ -34,7 +41,14 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
 
   app.get("/state", async () => buildGameState(engine.getSnapshot(), env));
 
-  app.post("/guess", async (request, reply) => {
+  app.post("/guess", {
+    config: {
+      rateLimit: {
+        max: 30,
+        timeWindow: "1 minute",
+      },
+    },
+  }, async (request, reply) => {
     const parsed = guessSchema.safeParse(request.body);
     if (!parsed.success) {
       return fail(reply, 400, "invalid_body", parsed.error.issues[0]?.message ?? "Invalid body");
