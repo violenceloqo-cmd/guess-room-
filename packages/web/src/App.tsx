@@ -10,6 +10,7 @@ import { RoomGrid } from "./components/RoomGrid";
 import { WalletPanel, type PanelMessage } from "./components/WalletPanel";
 import { WinnerReveal } from "./components/WinnerReveal";
 import { HowItWorks } from "./components/HowItWorks";
+import { ActivityFeed } from "./components/ActivityFeed";
 
 const WALLET_KEY = "gr_wallet";
 
@@ -138,6 +139,7 @@ export default function App() {
           message={message}
           onSubmit={onSubmit}
         />
+        <ActivityFeed cluster={state?.cluster} />
       </div>
       <WinnerReveal result={reveal} wallet={wallet} onClose={() => setReveal(null)} />
       <HowItWorks open={showHelp} onClose={() => setShowHelp(false)} />
