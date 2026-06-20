@@ -1,0 +1,852 @@
+:root {
+  /* base */
+  --bg: #07070f;
+  --bg-2: #0d0d1c;
+  --surface: rgba(20, 20, 38, 0.72);
+  --surface-2: rgba(28, 28, 52, 0.6);
+  --line: rgba(255, 255, 255, 0.08);
+  --text: #eef0ff;
+  --text-soft: #9aa0c7;
+
+  /* neon accents */
+  --accent: #14e0ff; /* cyan */
+  --accent-2: #ff2bd6; /* magenta */
+  --gold: #ffd23f;
+  --win: #2bff9e;
+  --danger: #ff3b6b;
+
+  /* room neon palette (tuned for dark bg) */
+  --room-1: #ff4d6d;
+  --room-2: #ff8c1a;
+  --room-3: #ffd23f;
+  --room-4: #9bff45;
+  --room-5: #2bff9e;
+  --room-6: #1ce3e3;
+  --room-7: #3a9bff;
+  --room-8: #8a6bff;
+  --room-9: #c34bff;
+  --room-10: #ff4fc3;
+
+  font-family: "Rubik", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Stage background ───────────────────────────────────────────────── */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% -10%, #1a1140 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 70%);
+}
+.stage-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(20, 224, 255, 0.16), transparent 40%),
+    radial-gradient(circle at 88% 14%, rgba(255, 43, 214, 0.16), transparent 42%),
+    radial-gradient(circle at 78% 82%, rgba(43, 255, 158, 0.12), transparent 45%),
+    radial-gradient(circle at 18% 88%, rgba(138, 107, 255, 0.14), transparent 45%);
+  filter: blur(6px);
+}
+/* Tron-style perspective grid floor at the bottom. */
+.stage-floor {
+  position: absolute;
+  left: -25%;
+  right: -25%;
+  bottom: -10%;
+  height: 55%;
+  background-image:
+    linear-gradient(to right, rgba(20, 224, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(to top, rgba(255, 43, 214, 0.18) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(420px) rotateX(62deg);
+  transform-origin: bottom center;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 85%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 85%);
+  opacity: 0.7;
+}
+.stage-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 20px 90px;
+}
+
+/* ── Neon panel primitive ───────────────────────────────────────────── */
+.neon-panel {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--glow, var(--accent)) 45%, var(--line));
+  border-radius: 16px;
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--glow, var(--accent)) 30%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ── Headings / text ────────────────────────────────────────────────── */
+h1,
+h2,
+h3 {
+  font-family: "Orbitron", "Rubik", sans-serif;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+.title {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: clamp(34px, 7vw, 66px);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--accent), #ffffff 40%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(20, 224, 255, 0.45))
+    drop-shadow(0 0 22px rgba(255, 43, 214, 0.35));
+}
+.subtitle {
+  font-size: 15px;
+  color: var(--text-soft);
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand-logo {
+  width: clamp(72px, 14vw, 120px);
+  height: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px rgba(20, 224, 255, 0.35))
+    drop-shadow(0 0 18px rgba(255, 43, 214, 0.25));
+}
+.stat-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.stat {
+  padding: 10px 18px;
+  min-width: 100px;
+  text-align: center;
+}
+.stat .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-soft);
+  display: block;
+}
+.stat .value {
+  font-family: "Orbitron", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ── Countdown ──────────────────────────────────────────────────────── */
+.countdown {
+  text-align: center;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+  --glow: var(--accent);
+}
+.countdown .phase {
+  font-family: "Orbitron", sans-serif;
+  font-size: 15px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+.countdown .secs {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: clamp(44px, 9vw, 88px);
+  line-height: 1;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(20, 224, 255, 0.55);
+}
+.countdown.locked {
+  --glow: var(--danger);
+  animation: pulseGlow 1s ease-in-out infinite;
+}
+.countdown.locked .secs {
+  color: var(--danger);
+  text-shadow: 0 0 18px rgba(255, 59, 107, 0.6);
+}
+.countdown .phase-sub {
+  margin-top: 4px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--text-soft);
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 16px color-mix(in srgb, var(--glow) 28%, transparent), inset 0 1px 0 rgba(255,255,255,0.06); }
+  50% { box-shadow: 0 0 34px color-mix(in srgb, var(--glow) 55%, transparent), inset 0 1px 0 rgba(255,255,255,0.06); }
+}
+
+/* ── Room grid (isometric stages) ───────────────────────────────────── */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+@media (max-width: 860px) {
+  .room-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.room {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+.room-stage {
+  position: relative;
+  height: 188px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--rc) 16%, #0a0a16), #0a0a16 78%);
+  border: 1.5px solid color-mix(in srgb, var(--rc) 70%, transparent);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--rc) 40%, transparent),
+    inset 0 0 30px color-mix(in srgb, var(--rc) 16%, transparent);
+  overflow: hidden;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+.room:hover .room-stage {
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 26px color-mix(in srgb, var(--rc) 55%, transparent),
+    inset 0 0 36px color-mix(in srgb, var(--rc) 24%, transparent);
+}
+/* back-wall label */
+.room-head {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+}
+.room-no {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: 30px;
+  color: var(--rc);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--rc) 70%, transparent);
+}
+.room-name {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-top: 1px;
+}
+/* glowing doorway behind the floor */
+.room-door {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  width: 46%;
+  height: 86px;
+  transform: translateX(-50%);
+  border-radius: 40% 40% 6px 6px;
+  background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--rc) 38%, transparent), transparent 70%);
+  border-top: 2px solid color-mix(in srgb, var(--rc) 45%, transparent);
+  z-index: 1;
+}
+/* isometric floor: a trapezoid (narrow at back, wide at front) with grid */
+.room-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 92px;
+  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--rc) 14%, transparent), color-mix(in srgb, var(--rc) 26%, transparent)),
+    repeating-linear-gradient(to right, color-mix(in srgb, var(--rc) 30%, transparent) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--rc) 26%, transparent) 0 1px, transparent 1px 18px);
+  border-top: 1px solid color-mix(in srgb, var(--rc) 45%, transparent);
+  z-index: 2;
+}
+/* where characters stand */
+.room-cast {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 8px;
+  height: 74px;
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1px;
+  flex-wrap: wrap-reverse;
+}
+.room.selected .room-stage {
+  border-color: var(--rc);
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--rc) 65%, transparent),
+    inset 0 0 40px color-mix(in srgb, var(--rc) 30%, transparent);
+}
+.room.selected::after {
+  content: "PICKED";
+  position: absolute;
+  top: -9px;
+  right: 10px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--rc);
+  color: #0a0a16;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--rc) 70%, transparent);
+  z-index: 6;
+}
+.room.winner .room-stage {
+  animation: winnerFlash 0.6s ease;
+  border-color: var(--rc);
+  box-shadow:
+    0 0 40px color-mix(in srgb, var(--rc) 85%, transparent),
+    inset 0 0 60px color-mix(in srgb, var(--rc) 45%, transparent);
+}
+@keyframes winnerFlash {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+.room.disabled {
+  cursor: not-allowed;
+}
+.room.disabled:not(.eliminated):not(.surviving) .room-stage {
+  filter: saturate(0.7) brightness(0.9);
+}
+
+/* still in the running during elimination */
+.room.surviving .room-stage {
+  border-color: var(--rc);
+  animation: survivePulse 1.1s ease-in-out infinite;
+}
+@keyframes survivePulse {
+  0%, 100% {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--rc) 45%, transparent), inset 0 0 30px color-mix(in srgb, var(--rc) 18%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 34px color-mix(in srgb, var(--rc) 80%, transparent), inset 0 0 44px color-mix(in srgb, var(--rc) 34%, transparent);
+  }
+}
+
+/* knocked out */
+.room.eliminated {
+  cursor: default;
+}
+.room.eliminated .room-stage {
+  filter: grayscale(0.85) brightness(0.5);
+  transform: scale(0.96);
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.room.eliminated:hover .room-stage {
+  transform: scale(0.96);
+}
+.room-out {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: 4px;
+  color: var(--danger);
+  text-shadow: 0 0 14px rgba(255, 59, 107, 0.7);
+  transform: rotate(-12deg);
+  border: 3px solid var(--danger);
+  border-radius: 10px;
+  width: 78%;
+  height: 46px;
+  margin: auto;
+  background: rgba(7, 7, 15, 0.35);
+}
+
+.room-count {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 5;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid color-mix(in srgb, var(--rc) 50%, transparent);
+}
+
+/* ── Characters / occupants ─────────────────────────────────────────── */
+.occupant {
+  position: relative;
+  width: 26px;
+  height: 46px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.occupant.is-self {
+  z-index: 5;
+}
+.occupant .you-tag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Orbitron", sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #0a0a16;
+  background: var(--gold);
+  padding: 1px 5px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 0 10px rgba(255, 210, 63, 0.7);
+  z-index: 6;
+}
+.occupant-more {
+  align-self: flex-end;
+  margin-bottom: 4px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.room-empty {
+  align-self: flex-end;
+  margin-bottom: 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  opacity: 0.6;
+}
+
+/* ── Wallet panel ───────────────────────────────────────────────────── */
+.panel {
+  padding: 20px 22px;
+  margin-bottom: 18px;
+  --glow: var(--accent-2);
+}
+.panel h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.wallet-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+.sketch-input {
+  flex: 1 1 280px;
+  min-width: 0;
+  font-family: "Rubik", monospace;
+  font-size: 16px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.sketch-input::placeholder {
+  color: #6b7099;
+}
+.sketch-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(20, 224, 255, 0.15), 0 0 16px rgba(20, 224, 255, 0.25);
+}
+
+.btn {
+  font-family: "Orbitron", sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  background: transparent;
+}
+.btn .neon-btn-inner {
+  display: inline-block;
+  padding: 13px 24px;
+  border-radius: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--glow, var(--accent)) 70%, transparent);
+  background: color-mix(in srgb, var(--glow, var(--accent)) 16%, rgba(0, 0, 0, 0.4));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--glow, var(--accent)) 30%, transparent);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.btn:not(:disabled):hover .neon-btn-inner {
+  transform: translateY(-2px);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--glow, var(--accent)) 55%, transparent);
+  background: color-mix(in srgb, var(--glow, var(--accent)) 26%, rgba(0, 0, 0, 0.4));
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  --glow: var(--accent);
+}
+.help-btn {
+  --glow: var(--accent-2);
+  align-self: center;
+}
+.help-btn .neon-btn-inner {
+  padding: 10px 18px;
+  font-size: 13px;
+}
+
+/* ── How it works modal ─────────────────────────────────────────────── */
+.help-card {
+  --glow: var(--accent);
+  padding: 28px 30px;
+  max-width: 520px;
+  width: 100%;
+}
+.help-card h2 {
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-shadow: 0 0 14px rgba(20, 224, 255, 0.45);
+}
+.help-steps {
+  list-style: none;
+  margin: 16px 0 4px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.help-steps li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.help-step-no {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  color: #07070f;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(20, 224, 255, 0.6);
+}
+.help-step-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  color: var(--text);
+}
+.help-step-body {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.hint {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-top: 10px;
+}
+.error {
+  color: var(--danger);
+}
+.joined {
+  color: var(--win);
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* ── Winner reveal ──────────────────────────────────────────────────── */
+.reveal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 4, 12, 0.78);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+.reveal-card {
+  --glow: var(--rc, var(--accent));
+  padding: 32px 34px;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+}
+.reveal-card h2 {
+  font-size: 28px;
+  margin-bottom: 4px;
+  color: var(--rc, var(--accent));
+  text-shadow: 0 0 16px color-mix(in srgb, var(--rc, var(--accent)) 60%, transparent);
+}
+.reveal-room {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-soft);
+  margin: 4px 0 16px;
+}
+.reveal-prize {
+  font-family: "Orbitron", sans-serif;
+  font-size: 24px;
+  color: var(--win);
+  text-shadow: 0 0 16px rgba(43, 255, 158, 0.5);
+  margin: 10px 0;
+}
+.reveal-lose {
+  font-size: 17px;
+  color: var(--text-soft);
+}
+.reveal-payouts {
+  text-align: left;
+  margin-top: 16px;
+  max-height: 160px;
+  overflow: auto;
+  font-size: 14px;
+  list-style: none;
+  padding: 0;
+}
+.reveal-payouts li {
+  margin: 3px 0;
+  color: var(--text-soft);
+}
+
+/* ── Misc ───────────────────────────────────────────────────────────── */
+.conn-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: var(--danger);
+  box-shadow: 0 0 8px var(--danger);
+}
+.conn-dot.ok {
+  background: var(--win);
+  box-shadow: 0 0 8px var(--win);
+}
+.center-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mono {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+}
+a {
+  color: var(--accent);
+}
+
+/* ── Host form ──────────────────────────────────────────────────────── */
+.host-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.host-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-soft);
+  gap: 6px;
+}
+.host-form .row-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 14px;
+  color: var(--text);
+}
+@media (max-width: 600px) {
+  .host-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Overlay (OBS browser source, transparent) ──────────────────────── */
+.overlay-route,
+.overlay-route body,
+.overlay-route #root {
+  background: transparent !important;
+}
+.overlay {
+  padding: 18px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.overlay-top {
+  padding: 12px 18px;
+  --glow: var(--accent);
+}
+.overlay-top-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.overlay-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.overlay-logo {
+  width: 72px;
+  height: auto;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 10px rgba(20, 224, 255, 0.4));
+}
+.overlay-title {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 14px rgba(20, 224, 255, 0.5);
+}
+.overlay-sub {
+  font-size: 15px;
+  color: var(--text-soft);
+}
+.overlay-count {
+  min-width: 200px;
+}
+.overlay-grid {
+  max-width: 820px;
+}
+.overlay-flash {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+.overlay-flash-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 28px;
+  font-family: "Orbitron", sans-serif;
+  font-size: 22px;
+  color: var(--win);
+}
+.overlay-ticker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 16px;
+  background: rgba(7, 7, 15, 0.85);
+  border-top: 1px solid var(--accent);
+  box-shadow: 0 0 20px rgba(20, 224, 255, 0.3);
+  overflow: hidden;
+}
+.ticker-label {
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-2);
+  white-space: nowrap;
+}
+.ticker-track {
+  display: flex;
+  gap: 28px;
+  white-space: nowrap;
+  animation: ticker 24s linear infinite;
+}
+.ticker-item {
+  font-size: 16px;
+  color: var(--text);
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

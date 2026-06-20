@@ -1,0 +1,30 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.DS_Store
+
+# env / secrets
+.env
+.env.local
+.env.*.local
+*.key
+keypairs/
+secrets/
+
+# solana keypairs
+*-keypair.json
+hot-wallet.json
+treasury.json
+
+# supabase cli
+supabase/.temp/
+
+# editor
+.vscode/
+.idea/
+
+# vite
+packages/web/dist/
+.cache/
