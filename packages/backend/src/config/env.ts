@@ -46,7 +46,7 @@ const schema = z.object({
 
   HOT_WALLET_SECRET: emptyToUndef(z.string().trim().optional()),
 
-  ROUND_POOL_SOL: z.coerce.number().nonnegative().default(2),
+  ROUND_POOL_SOL: z.coerce.number().nonnegative().default(0.5),
   ROUND_DURATION_SECONDS: z.coerce.number().int().positive().default(60),
   ROUND_LOCK_BUFFER_SECONDS: z.coerce.number().int().nonnegative().default(3),
   ELIMINATION_INTERVAL_SECONDS: z.coerce.number().int().positive().default(10),

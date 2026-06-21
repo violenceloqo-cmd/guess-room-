@@ -8,7 +8,7 @@ export const DEFAULTS = {
   roundLockBufferSeconds: 3,
   /** Seconds between room eliminations after picking closes. */
   eliminationIntervalSeconds: 10,
-  roundPoolSol: 2,
+  roundPoolSol: 0.5,
   tokenMinHold: 10_000,
   rolloverOnNoWinner: true,
 } as const;

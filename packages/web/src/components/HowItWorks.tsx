@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { TOKEN_TICKER } from "@guess-room/shared";
+import { TOKEN_TICKER } from "@room-royale/shared";
 import { NeonPanel } from "./NeonPanel";
 
 interface HowItWorksProps {
@@ -25,8 +25,8 @@ const STEPS: { n: string; title: string; body: string }[] = [
   },
   {
     n: "4",
-    title: "Split the 2 SOL pot",
-    body: "Everyone who picked the last-standing room splits the 2 SOL prize pool equally, paid straight to your wallet. If nobody picked it, the pot rolls over to the next round.",
+    title: "Split the 0.5 SOL pot",
+    body: "Everyone who picked the last-standing room splits the 0.5 SOL prize pool equally, paid straight to your wallet. If nobody picked it, the pot rolls over to the next round.",
   },
 ];
 
@@ -52,7 +52,7 @@ export function HowItWorks({ open, onClose }: HowItWorksProps) {
             <NeonPanel className="help-card" glow="var(--accent)">
               <h2>How it works</h2>
               <p className="hint">
-                Guess Room is a live elimination game. Hold {TOKEN_TICKER}, pick a room, and survive.
+                Room Royale is a live elimination game. Hold {TOKEN_TICKER}, pick a room, and survive.
               </p>
               <ol className="help-steps">
                 {STEPS.map((s) => (

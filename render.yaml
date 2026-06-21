@@ -1,4 +1,4 @@
-# Render Blueprint for the Guess Room backend (the always-on game engine).
+# Render Blueprint for the Room Royale backend (the always-on game engine).
 # Deploy: Render Dashboard → New → Blueprint → pick this repo.
 #
 # IMPORTANT:
@@ -9,13 +9,13 @@
 #  - Secrets (sync:false) are entered in the Render dashboard, never committed.
 services:
   - type: web
-    name: guess-room-backend
+    name: room-royale-backend
     runtime: node
     plan: starter
     region: oregon
     numInstances: 1
     healthCheckPath: /health
-    buildCommand: npm install && npm run build:shared && npm run build --workspace @guess-room/backend
+    buildCommand: npm install && npm run build:shared && npm run build --workspace @room-royale/backend
     startCommand: node packages/backend/dist/index.js
     envVars:
       - key: NODE_ENV
@@ -25,7 +25,7 @@ services:
       - key: TOKEN_MIN_HOLD
         value: "100000"
       - key: ROUND_POOL_SOL
-        value: "2"
+        value: "0.5"
       - key: ROUND_DURATION_SECONDS
         value: "60"
       - key: ROUND_LOCK_BUFFER_SECONDS
