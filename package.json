@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build:shared": "npm run build --workspace @room-royale/shared",
+    "build:backend": "npm run build --workspace @room-royale/backend",
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev:shared & npm run dev:backend & npm run dev:web & wait",
     "dev:shared": "npm run dev --workspace @room-royale/shared",

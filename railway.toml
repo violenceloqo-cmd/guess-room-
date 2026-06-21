@@ -1,0 +1,10 @@
+# Railway config for the Room Royale backend (monorepo root).
+# Service settings → Config file path: /railway.toml (if not auto-detected).
+
+[build]
+buildCommand = "npm run build:shared && npm run build:backend"
+
+[deploy]
+startCommand = "node packages/backend/dist/index.js"
+healthcheckPath = "/health"
+restartPolicyType = "ON_FAILURE"
