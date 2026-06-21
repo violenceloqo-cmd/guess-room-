@@ -4,6 +4,7 @@ import { useGameState } from "./hooks/useGameState";
 import { useCountdown } from "./hooks/useCountdown";
 import { postGuess } from "./lib/api";
 import { StageBackground } from "./components/PaperBackground";
+import { FloatingMascots } from "./components/FloatingMascots";
 import { Header } from "./components/Header";
 import { Countdown } from "./components/Countdown";
 import { RoomGrid } from "./components/RoomGrid";
@@ -118,6 +119,7 @@ export default function App() {
   return (
     <>
       <StageBackground />
+      <FloatingMascots />
       <div className="app">
         <Header state={state} connected={connected} onHelp={() => setShowHelp(true)} />
         <Countdown seconds={seconds} status={status} roomsLeft={roomsLeft} />

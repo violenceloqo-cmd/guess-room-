@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#140a24"/>
+  <g transform="translate(13 9) scale(0.38)">
+    <!-- feet -->
+    <ellipse cx="40" cy="120" rx="9" ry="6" fill="#ff4fa3"/>
+    <ellipse cx="60" cy="120" rx="9" ry="6" fill="#ff4fa3"/>
+    <!-- arms -->
+    <path d="M26 70 Q14 64 12 50" stroke="#ff4fa3" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <path d="M74 74 Q86 76 88 86" stroke="#ff4fa3" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <!-- body -->
+    <path d="M50 8 C30 8 24 24 24 48 L24 94 C24 110 35 120 50 120 C65 120 76 110 76 94 L76 48 C76 24 70 8 50 8 Z" fill="#ff4fa3"/>
+    <path d="M50 8 C30 8 24 24 24 48 L24 70 C24 50 34 30 50 30 C66 30 76 50 76 70 L76 48 C76 24 70 8 50 8 Z" fill="rgba(255,255,255,0.16)"/>
+    <!-- face -->
+    <circle cx="40" cy="56" r="4" fill="#0e0a18"/>
+    <circle cx="60" cy="56" r="4" fill="#0e0a18"/>
+    <circle cx="41.4" cy="54.6" r="1.2" fill="#fff"/>
+    <circle cx="61.4" cy="54.6" r="1.2" fill="#fff"/>
+    <path d="M41 70 Q50 78 59 70" stroke="#0e0a18" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+    <!-- crown -->
+    <path d="M36 10 L40 2 L46 8 L50 -1 L54 8 L60 2 L64 10 Z" fill="#ffd23f" stroke="#caa01f" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+</svg>

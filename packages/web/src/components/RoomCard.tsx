@@ -91,11 +91,11 @@ export function RoomCard({
       }}
     >
       <div className="room-stage">
+        <div className="room-glow" />
         <div className="room-head">
           <div className="room-no">{room.id}</div>
           <div className="room-name">{room.name}</div>
         </div>
-        <div className="room-door" />
         <div className="room-floor" />
         <div className="room-cast">
           <AnimatePresence mode="popLayout">
@@ -107,6 +107,7 @@ export function RoomCard({
           {ordered.length === 0 && <span className="room-empty">empty</span>}
         </div>
         <div className="room-count">
+          <span className="room-count-dot" />
           {count} {count === 1 ? "player" : "players"}
         </div>
         {eliminated && <div className="room-out">OUT</div>}
