@@ -17,6 +17,8 @@
     "payout:test": "tsx src/scripts/send-test.ts"
   },
   "dependencies": {
+    "@fastify/cors": "^10.0.0",
+    "@fastify/rate-limit": "^10.1.0",
     "@room-royale/shared": "*",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.4",
@@ -24,12 +26,12 @@
     "bs58": "^6.0.0",
     "dotenv": "^16.4.5",
     "fastify": "^5.0.0",
-    "@fastify/cors": "^10.0.0",
-    "@fastify/rate-limit": "^10.1.0",
+    "ws": "^7.5.11",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.7.0",
+    "@types/ws": "^7.4.7",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"

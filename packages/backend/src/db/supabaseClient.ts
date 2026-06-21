@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import WebSocket from "ws";
 import { getEnv } from "../config/env.js";
 
 let client: SupabaseClient | undefined;
@@ -23,6 +24,10 @@ export function getServiceClient(): SupabaseClient {
     }
     client = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
       auth: { persistSession: false, autoRefreshToken: false },
+      // Node < 22 has no global WebSocket; the backend never uses realtime, but
+      // supabase-js constructs a RealtimeClient eagerly and needs a transport.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      realtime: { transport: WebSocket as any },
     });
   }
   return client;
