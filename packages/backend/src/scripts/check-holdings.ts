@@ -4,7 +4,7 @@ import { TokenGate } from "../solana/verifier.js";
 
 /**
  * Check whether a wallet meets the holding requirement. Usage:
- *   npm run holdings:check --workspace @guess-room/backend -- <wallet>
+ *   npm run holdings:check --workspace @room-royale/backend -- <wallet>
  */
 async function main() {
   const env = getEnv();

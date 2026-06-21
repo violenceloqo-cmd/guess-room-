@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { formatSol, getRoom, shortAddress } from "@guess-room/shared";
+import { formatSol, getRoom, shortAddress } from "@room-royale/shared";
 import { useGameState } from "./hooks/useGameState";
 import { useCountdown } from "./hooks/useCountdown";
 import { RoomGrid } from "./components/RoomGrid";
@@ -70,9 +70,9 @@ export default function Overlay() {
       <NeonPanel className="overlay-top" glow="var(--accent)">
         <div className="overlay-top-inner">
           <div className="overlay-brand">
-            <img src="/logo.png" alt="" className="overlay-logo" aria-hidden />
+            <div className="overlay-mark" aria-hidden>♛</div>
             <div>
-              <div className="overlay-title">GUESS ROOM</div>
+              <div className="overlay-title">Room Royale</div>
               <div className="overlay-sub">
                 Round #{round?.roundNumber ?? "—"} ·{" "}
                 {round ? formatSol(BigInt(round.poolLamports)) : "—"} pool

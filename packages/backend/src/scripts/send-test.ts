@@ -1,12 +1,12 @@
 import { getEnv } from "../config/env.js";
 import { getConnection, getHotWallet, toPublicKey } from "../solana/connection.js";
 import { sendSol, getBalanceLamports } from "../solana/payout.js";
-import { lamportsToSol, solToLamports } from "@guess-room/shared";
+import { lamportsToSol, solToLamports } from "@room-royale/shared";
 
 /**
  * Send a test payout from the hot wallet. Respects DRY_RUN and MAX_PAYOUT_SOL.
  * Usage:
- *   npm run payout:test --workspace @guess-room/backend -- <to> <sol>
+ *   npm run payout:test --workspace @room-royale/backend -- <to> <sol>
  */
 async function main() {
   const env = getEnv();

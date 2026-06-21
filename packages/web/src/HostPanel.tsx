@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { formatSol, lamportsToSol } from "@guess-room/shared";
+import { formatSol, lamportsToSol } from "@room-royale/shared";
 import { useGameState } from "./hooks/useGameState";
 import {
   getHostInfo,
@@ -11,12 +11,15 @@ import {
 import { StageBackground } from "./components/PaperBackground";
 import { NeonPanel } from "./components/NeonPanel";
 
-const SECRET_KEY = "gr_host_secret";
+const SECRET_KEY = "rr_host_secret";
+const LEGACY_SECRET_KEY = "gr_host_secret";
 
 /** Protected host console: start/stop the game and tweak round economics live. */
 export default function HostPanel() {
   const { state } = useGameState(1000);
-  const [secret, setSecret] = useState(() => localStorage.getItem(SECRET_KEY) ?? "");
+  const [secret, setSecret] = useState(
+    () => localStorage.getItem(SECRET_KEY) ?? localStorage.getItem(LEGACY_SECRET_KEY) ?? "",
+  );
   const [authed, setAuthed] = useState(false);
   const [info, setInfo] = useState<HostInfo | null>(null);
   const [msg, setMsg] = useState<{ text: string; kind: "ok" | "err" } | null>(null);

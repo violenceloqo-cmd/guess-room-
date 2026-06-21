@@ -1,5 +1,5 @@
 import { randomInt } from "node:crypto";
-import { ROOM_COUNT } from "@guess-room/shared";
+import { ROOM_COUNT } from "@room-royale/shared";
 
 /**
  * Picks a uniformly random winning room id in [1, ROOM_COUNT] using a CSPRNG.

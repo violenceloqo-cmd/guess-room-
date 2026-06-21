@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Room } from "@guess-room/shared";
+import type { Room } from "@room-royale/shared";
 import { AnimatePresence, motion } from "framer-motion";
 import { Character } from "./Character";
 import { avatarColor, roomColor } from "../lib/colors";

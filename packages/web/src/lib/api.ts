@@ -1,4 +1,4 @@
-import type { GameStatePublic } from "@guess-room/shared";
+import type { GameStatePublic } from "@room-royale/shared";
 
 const API_URL =
   (import.meta.env.VITE_API_URL as string | undefined) ?? "http://localhost:8787";

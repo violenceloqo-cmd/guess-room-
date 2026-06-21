@@ -1,4 +1,4 @@
-import { splitAmongWallets } from "@guess-room/shared";
+import { splitAmongWallets } from "@room-royale/shared";
 import type {
   Settlement,
   SettlementInput,

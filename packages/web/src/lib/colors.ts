@@ -1,4 +1,4 @@
-import { occupantColorIndex } from "@guess-room/shared";
+import { occupantColorIndex } from "@room-royale/shared";
 
 /** Bright crayon color per room (indexed by roomId - 1). */
 export const ROOM_COLORS: readonly string[] = [

@@ -1,4 +1,4 @@
-import type { RoundStatus } from "@guess-room/shared";
+import type { RoundStatus } from "@room-royale/shared";
 import { NeonPanel } from "./NeonPanel";
 
 interface CountdownProps {

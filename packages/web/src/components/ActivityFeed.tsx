@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { formatSol, occupantId, shortAddress } from "@guess-room/shared";
+import { formatSol, occupantId, shortAddress } from "@room-royale/shared";
 import { NeonPanel } from "./NeonPanel";
 import { usePayouts } from "../hooks/usePayouts";
 import { avatarColor } from "../lib/colors";

@@ -1,4 +1,4 @@
--- Guess Room — initial schema
+-- Room Royale — initial schema
 -- Backend (service role) is the ONLY writer. Browser clients (anon key) get
 -- read-only access via RLS for live data, and receive updates over Realtime.
 --

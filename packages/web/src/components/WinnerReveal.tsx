@@ -4,7 +4,7 @@ import {
   getRoom,
   shortAddress,
   type RoundResultPublic,
-} from "@guess-room/shared";
+} from "@room-royale/shared";
 import { NeonPanel } from "./NeonPanel";
 import { Character } from "./Character";
 import { roomColor } from "../lib/colors";

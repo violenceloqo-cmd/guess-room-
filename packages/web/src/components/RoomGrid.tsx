@@ -1,4 +1,4 @@
-import { ROOMS } from "@guess-room/shared";
+import { ROOMS } from "@room-royale/shared";
 import { LayoutGroup } from "framer-motion";
 import { RoomCard } from "./RoomCard";
 

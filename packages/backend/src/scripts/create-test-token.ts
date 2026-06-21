@@ -10,7 +10,7 @@ import { getConnection, getHotWallet, toPublicKey } from "../solana/connection.j
  * Creates a throwaway SPL token on devnet so the engine can be tested end-to-end
  * before the real pump.fun launch. Mints `supply` to the hot wallet (and an
  * optional extra recipient). Usage:
- *   npm run token:create --workspace @guess-room/backend -- [recipient] [supplyUi]
+ *   npm run token:create --workspace @room-royale/backend -- [recipient] [supplyUi]
  *
  * Copy the printed mint into TOKEN_MINT in your .env.
  */

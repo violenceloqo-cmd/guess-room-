@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ROOM_COUNT } from "@guess-room/shared";
+import { ROOM_COUNT } from "@room-royale/shared";
 
 export const guessSchema = z.object({
   wallet: z.string().trim().min(32).max(44),

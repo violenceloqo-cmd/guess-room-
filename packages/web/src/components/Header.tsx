@@ -1,5 +1,6 @@
-import type { GameStatePublic } from "@guess-room/shared";
-import { formatSol, TOKEN_TICKER } from "@guess-room/shared";
+import type { GameStatePublic } from "@room-royale/shared";
+import { formatSol, TOKEN_TICKER } from "@room-royale/shared";
+import { BrandMark } from "./BrandMark";
 import { NeonPanel } from "./NeonPanel";
 
 interface HeaderProps {
@@ -17,9 +18,9 @@ export function Header({ state, connected, onHelp }: HeaderProps) {
   return (
     <header className="header">
       <div className="brand">
-        <img src="/logo.png" alt="Guess Room" className="brand-logo" />
+        <BrandMark size={56} className="brand-mark" />
         <div>
-          <h1 className="title">Guess Room</h1>
+          <h1 className="title">Room Royale</h1>
           <div className="subtitle">
             <span className={`conn-dot ${connected ? "ok" : ""}`} />
             {connected ? "live" : "reconnecting…"} · {state?.cluster ?? "devnet"}

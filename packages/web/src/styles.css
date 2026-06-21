@@ -1,33 +1,33 @@
 :root {
-  /* base */
-  --bg: #07070f;
-  --bg-2: #0d0d1c;
-  --surface: rgba(20, 20, 38, 0.72);
-  --surface-2: rgba(28, 28, 52, 0.6);
-  --line: rgba(255, 255, 255, 0.08);
-  --text: #eef0ff;
-  --text-soft: #9aa0c7;
+  /* base — deep arena purple */
+  --bg: #0a0612;
+  --bg-2: #120a1e;
+  --surface: rgba(28, 16, 44, 0.82);
+  --surface-2: rgba(36, 22, 56, 0.72);
+  --line: rgba(244, 197, 66, 0.12);
+  --text: #f8f2ea;
+  --text-soft: #b8a8c8;
 
-  /* neon accents */
-  --accent: #14e0ff; /* cyan */
-  --accent-2: #ff2bd6; /* magenta */
-  --gold: #ffd23f;
-  --win: #2bff9e;
-  --danger: #ff3b6b;
+  /* royale accents */
+  --accent: #f4c542; /* gold */
+  --accent-2: #e94560; /* crimson */
+  --gold: #ffd56a;
+  --win: #5cdb95;
+  --danger: #ff4757;
 
-  /* room neon palette (tuned for dark bg) */
-  --room-1: #ff4d6d;
-  --room-2: #ff8c1a;
-  --room-3: #ffd23f;
-  --room-4: #9bff45;
-  --room-5: #2bff9e;
-  --room-6: #1ce3e3;
-  --room-7: #3a9bff;
-  --room-8: #8a6bff;
-  --room-9: #c34bff;
-  --room-10: #ff4fc3;
+  /* room palette (warm arena tones) */
+  --room-1: #ff6b6b;
+  --room-2: #ff9f43;
+  --room-3: #ffd56a;
+  --room-4: #a3e635;
+  --room-5: #34d399;
+  --room-6: #22d3ee;
+  --room-7: #60a5fa;
+  --room-8: #a78bfa;
+  --room-9: #e879f9;
+  --room-10: #fb7185;
 
-  font-family: "Rubik", system-ui, -apple-system, sans-serif;
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
   color: var(--text);
 }
 
@@ -55,40 +55,56 @@ body {
   z-index: -1;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% -10%, #1a1140 0%, transparent 55%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 70%);
+    radial-gradient(ellipse 90% 60% at 50% -5%, #2a1448 0%, transparent 55%),
+    linear-gradient(175deg, var(--bg-2) 0%, var(--bg) 65%);
 }
-.stage-glow {
+.stage-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 28px,
+      rgba(244, 197, 66, 0.03) 28px,
+      rgba(244, 197, 66, 0.03) 29px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 28px,
+      rgba(233, 69, 96, 0.025) 28px,
+      rgba(233, 69, 96, 0.025) 29px
+    );
+}
+.stage-spotlight {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 12% 18%, rgba(20, 224, 255, 0.16), transparent 40%),
-    radial-gradient(circle at 88% 14%, rgba(255, 43, 214, 0.16), transparent 42%),
-    radial-gradient(circle at 78% 82%, rgba(43, 255, 158, 0.12), transparent 45%),
-    radial-gradient(circle at 18% 88%, rgba(138, 107, 255, 0.14), transparent 45%);
-  filter: blur(6px);
+    radial-gradient(circle at 50% 0%, rgba(244, 197, 66, 0.14), transparent 42%),
+    radial-gradient(circle at 15% 30%, rgba(233, 69, 96, 0.08), transparent 35%),
+    radial-gradient(circle at 85% 25%, rgba(167, 139, 250, 0.1), transparent 38%);
 }
-/* Tron-style perspective grid floor at the bottom. */
-.stage-floor {
+.stage-ring {
   position: absolute;
-  left: -25%;
-  right: -25%;
-  bottom: -10%;
-  height: 55%;
-  background-image:
-    linear-gradient(to right, rgba(20, 224, 255, 0.22) 1px, transparent 1px),
-    linear-gradient(to top, rgba(255, 43, 214, 0.18) 1px, transparent 1px);
-  background-size: 64px 64px;
-  transform: perspective(420px) rotateX(62deg);
-  transform-origin: bottom center;
-  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 85%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 85%);
-  opacity: 0.7;
+  left: 50%;
+  bottom: -18%;
+  width: 140%;
+  height: 48%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid rgba(244, 197, 66, 0.18);
+  box-shadow:
+    0 0 80px rgba(244, 197, 66, 0.08),
+    inset 0 0 60px rgba(244, 197, 66, 0.04);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 75%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 75%);
 }
 .stage-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.6) 100%);
+  background: radial-gradient(circle at 50% 35%, transparent 50%, rgba(0, 0, 0, 0.65) 100%);
 }
 
 .app {
@@ -97,40 +113,52 @@ body {
   padding: 28px 20px 90px;
 }
 
-/* ── Neon panel primitive ───────────────────────────────────────────── */
+/* ── Royale panel primitive ─────────────────────────────────────────── */
 .neon-panel {
   position: relative;
   background: var(--surface);
-  border: 1px solid color-mix(in srgb, var(--glow, var(--accent)) 45%, var(--line));
-  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--glow, var(--accent)) 38%, var(--line));
+  border-radius: 18px;
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--glow, var(--accent)) 30%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    0 0 20px color-mix(in srgb, var(--glow, var(--accent)) 18%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.neon-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--glow, var(--accent)) 8%, transparent) 0%,
+    transparent 45%
+  );
 }
 
 /* ── Headings / text ────────────────────────────────────────────────── */
 h1,
 h2,
 h3 {
-  font-family: "Orbitron", "Rubik", sans-serif;
+  font-family: "Syne", "DM Sans", sans-serif;
   margin: 0;
   line-height: 1.1;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 .title {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 900;
-  font-size: clamp(34px, 7vw, 66px);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, var(--accent), #ffffff 40%, var(--accent-2));
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 6vw, 52px);
+  letter-spacing: 1px;
+  text-transform: none;
+  background: linear-gradient(105deg, #ffe08a 0%, var(--accent) 35%, #fff5e0 70%, var(--accent-2) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 14px rgba(20, 224, 255, 0.45))
-    drop-shadow(0 0 22px rgba(255, 43, 214, 0.35));
+  filter: drop-shadow(0 2px 12px rgba(244, 197, 66, 0.35));
 }
 .subtitle {
   font-size: 15px;
@@ -153,12 +181,15 @@ h3 {
   align-items: center;
   gap: 16px;
 }
+.brand-mark {
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 14px rgba(244, 197, 66, 0.35));
+}
 .brand-logo {
   width: clamp(72px, 14vw, 120px);
   height: auto;
   flex-shrink: 0;
-  filter: drop-shadow(0 0 12px rgba(20, 224, 255, 0.35))
-    drop-shadow(0 0 18px rgba(255, 43, 214, 0.25));
+  filter: drop-shadow(0 4px 14px rgba(244, 197, 66, 0.35));
 }
 .stat-row {
   display: flex;
@@ -178,7 +209,7 @@ h3 {
   display: block;
 }
 .stat .value {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 22px;
   font-weight: 700;
 }
@@ -191,19 +222,19 @@ h3 {
   --glow: var(--accent);
 }
 .countdown .phase {
-  font-family: "Orbitron", sans-serif;
-  font-size: 15px;
+  font-family: "Syne", sans-serif;
+  font-size: 14px;
   color: var(--text-soft);
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
 }
 .countdown .secs {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 900;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
   font-size: clamp(44px, 9vw, 88px);
   line-height: 1;
   color: var(--accent);
-  text-shadow: 0 0 18px rgba(20, 224, 255, 0.55);
+  text-shadow: 0 2px 20px rgba(244, 197, 66, 0.45);
 }
 .countdown.locked {
   --glow: var(--danger);
@@ -211,7 +242,7 @@ h3 {
 }
 .countdown.locked .secs {
   color: var(--danger);
-  text-shadow: 0 0 18px rgba(255, 59, 107, 0.6);
+  text-shadow: 0 2px 20px rgba(255, 71, 87, 0.5);
 }
 .countdown .phase-sub {
   margin-top: 4px;
@@ -246,21 +277,23 @@ h3 {
 .room-stage {
   position: relative;
   height: 188px;
-  border-radius: 14px;
+  border-radius: 16px 16px 12px 12px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--rc) 16%, #0a0a16), #0a0a16 78%);
-  border: 1.5px solid color-mix(in srgb, var(--rc) 70%, transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--rc) 12%, #120a1e), #0e0818 75%);
+  border: 1.5px solid color-mix(in srgb, var(--rc) 55%, transparent);
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--rc) 40%, transparent),
-    inset 0 0 30px color-mix(in srgb, var(--rc) 16%, transparent);
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    0 0 16px color-mix(in srgb, var(--rc) 25%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
   overflow: hidden;
   transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
 }
 .room:hover .room-stage {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   box-shadow:
-    0 8px 26px color-mix(in srgb, var(--rc) 55%, transparent),
-    inset 0 0 36px color-mix(in srgb, var(--rc) 24%, transparent);
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 24px color-mix(in srgb, var(--rc) 40%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 /* back-wall label */
 .room-head {
@@ -273,11 +306,11 @@ h3 {
   pointer-events: none;
 }
 .room-no {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 900;
-  font-size: 30px;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 28px;
   color: var(--rc);
-  text-shadow: 0 0 14px color-mix(in srgb, var(--rc) 70%, transparent);
+  text-shadow: 0 2px 10px color-mix(in srgb, var(--rc) 50%, transparent);
 }
 .room-name {
   font-size: 12px;
@@ -286,17 +319,18 @@ h3 {
   color: var(--text-soft);
   margin-top: 1px;
 }
-/* glowing doorway behind the floor */
+/* arched chamber entrance */
 .room-door {
   position: absolute;
   left: 50%;
-  top: 40px;
-  width: 46%;
-  height: 86px;
+  top: 38px;
+  width: 44%;
+  height: 88px;
   transform: translateX(-50%);
-  border-radius: 40% 40% 6px 6px;
-  background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--rc) 38%, transparent), transparent 70%);
-  border-top: 2px solid color-mix(in srgb, var(--rc) 45%, transparent);
+  border-radius: 50% 50% 8px 8px;
+  background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--rc) 32%, transparent), transparent 72%);
+  border: 2px solid color-mix(in srgb, var(--rc) 35%, transparent);
+  border-bottom: none;
   z-index: 1;
 }
 /* isometric floor: a trapezoid (narrow at back, wide at front) with grid */
@@ -335,18 +369,19 @@ h3 {
     inset 0 0 40px color-mix(in srgb, var(--rc) 30%, transparent);
 }
 .room.selected::after {
-  content: "PICKED";
+  content: "LOCKED IN";
   position: absolute;
   top: -9px;
   right: 10px;
-  font-family: "Orbitron", sans-serif;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  padding: 3px 8px;
-  border-radius: 8px;
-  background: var(--rc);
-  color: #0a0a16;
-  box-shadow: 0 0 14px color-mix(in srgb, var(--rc) 70%, transparent);
+  font-family: "Syne", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--rc), color-mix(in srgb, var(--rc) 70%, #000));
+  color: #fff8e7;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--rc) 55%, transparent);
   z-index: 6;
 }
 .room.winner .room-stage {
@@ -402,19 +437,19 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Orbitron", sans-serif;
-  font-weight: 900;
-  font-size: 30px;
-  letter-spacing: 4px;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: 3px;
   color: var(--danger);
-  text-shadow: 0 0 14px rgba(255, 59, 107, 0.7);
-  transform: rotate(-12deg);
-  border: 3px solid var(--danger);
-  border-radius: 10px;
+  text-shadow: 0 2px 12px rgba(255, 71, 87, 0.6);
+  transform: rotate(-8deg);
+  border: 2px solid var(--danger);
+  border-radius: 12px;
   width: 78%;
   height: 46px;
   margin: auto;
-  background: rgba(7, 7, 15, 0.35);
+  background: rgba(10, 6, 18, 0.55);
 }
 
 .room-count {
@@ -448,7 +483,7 @@ h3 {
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 9px;
   letter-spacing: 1px;
   color: #0a0a16;
@@ -462,7 +497,7 @@ h3 {
 .occupant-more {
   align-self: flex-end;
   margin-bottom: 4px;
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 12px;
   font-weight: 700;
   padding: 3px 7px;
@@ -502,7 +537,7 @@ h3 {
 .sketch-input {
   flex: 1 1 280px;
   min-width: 0;
-  font-family: "Rubik", monospace;
+  font-family: "DM Sans", monospace;
   font-size: 16px;
   padding: 13px 16px;
   border-radius: 12px;
@@ -517,11 +552,11 @@ h3 {
 }
 .sketch-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(20, 224, 255, 0.15), 0 0 16px rgba(20, 224, 255, 0.25);
+  box-shadow: 0 0 0 3px rgba(244, 197, 66, 0.12), 0 0 16px rgba(244, 197, 66, 0.2);
 }
 
 .btn {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 15px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -570,10 +605,10 @@ h3 {
 }
 .help-card h2 {
   font-size: 24px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+  text-transform: none;
+  letter-spacing: 0.5px;
   color: var(--accent);
-  text-shadow: 0 0 14px rgba(20, 224, 255, 0.45);
+  text-shadow: 0 2px 12px rgba(244, 197, 66, 0.35);
 }
 .help-steps {
   list-style: none;
@@ -596,14 +631,14 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-weight: 700;
-  color: #07070f;
+  color: #120a1e;
   background: var(--accent);
-  box-shadow: 0 0 12px rgba(20, 224, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(244, 197, 66, 0.45);
 }
 .help-step-title {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 15px;
   letter-spacing: 0.5px;
   color: var(--text);
@@ -662,7 +697,7 @@ h3 {
   margin: 4px 0 16px;
 }
 .reveal-prize {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 24px;
   color: var(--win);
   text-shadow: 0 0 16px rgba(43, 255, 158, 0.5);
@@ -773,20 +808,34 @@ a {
   align-items: center;
   gap: 12px;
 }
+.overlay-mark {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border-radius: 12px;
+  background: rgba(20, 10, 36, 0.9);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  box-shadow: 0 4px 16px rgba(244, 197, 66, 0.3);
+}
 .overlay-logo {
   width: 72px;
   height: auto;
   flex-shrink: 0;
-  filter: drop-shadow(0 0 10px rgba(20, 224, 255, 0.4));
+  filter: drop-shadow(0 4px 12px rgba(244, 197, 66, 0.35));
 }
 .overlay-title {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 900;
-  font-size: 28px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: 0.5px;
+  text-transform: none;
   color: var(--accent);
-  text-shadow: 0 0 14px rgba(20, 224, 255, 0.5);
+  text-shadow: 0 2px 12px rgba(244, 197, 66, 0.4);
 }
 .overlay-sub {
   font-size: 15px;
@@ -810,7 +859,7 @@ a {
   align-items: center;
   gap: 14px;
   padding: 16px 28px;
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 22px;
   color: var(--win);
 }
@@ -823,13 +872,13 @@ a {
   align-items: center;
   gap: 14px;
   padding: 9px 16px;
-  background: rgba(7, 7, 15, 0.85);
-  border-top: 1px solid var(--accent);
-  box-shadow: 0 0 20px rgba(20, 224, 255, 0.3);
+  background: rgba(10, 6, 18, 0.92);
+  border-top: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  box-shadow: 0 -4px 24px rgba(244, 197, 66, 0.15);
   overflow: hidden;
 }
 .ticker-label {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -864,7 +913,7 @@ a {
   margin-bottom: 10px;
 }
 .activity-title {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -912,7 +961,7 @@ a {
   color: var(--text);
 }
 .activity-amount {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Syne", sans-serif;
   font-weight: 700;
   font-size: 14px;
   color: var(--win);

@@ -1,12 +1,13 @@
 /**
- * Dark neon "stage" backdrop: a deep gradient, a few colored glow blooms, and a
- * Tron-style perspective grid floor at the bottom. Fixed behind all content.
+ * Arena backdrop: deep purple stage, gold spotlight, subtle cross-hatch texture,
+ * and a soft elliptical "ring" at the bottom suggesting a battle floor.
  */
 export function StageBackground() {
   return (
     <div className="stage" aria-hidden>
-      <div className="stage-glow" />
-      <div className="stage-floor" />
+      <div className="stage-texture" />
+      <div className="stage-spotlight" />
+      <div className="stage-ring" />
       <div className="stage-vignette" />
     </div>
   );

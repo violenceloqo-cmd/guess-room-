@@ -1,21 +1,21 @@
 {
-  "name": "guess-room",
+  "name": "room-royale",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Guess Room — an interactive Solana stream game with a pump.fun token, animated pencil/stickman UI, and auto hot-wallet payouts.",
+  "description": "Room Royale — an interactive Solana stream game with a pump.fun token, animated stickman UI, and auto hot-wallet payouts.",
   "workspaces": [
     "packages/shared",
     "packages/backend",
     "packages/web"
   ],
   "scripts": {
-    "build:shared": "npm run build --workspace @guess-room/shared",
+    "build:shared": "npm run build --workspace @room-royale/shared",
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev:shared & npm run dev:backend & npm run dev:web & wait",
-    "dev:shared": "npm run dev --workspace @guess-room/shared",
-    "dev:backend": "npm run dev --workspace @guess-room/backend",
-    "dev:web": "npm run dev --workspace @guess-room/web",
+    "dev:shared": "npm run dev --workspace @room-royale/shared",
+    "dev:backend": "npm run dev --workspace @room-royale/backend",
+    "dev:web": "npm run dev --workspace @room-royale/web",
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },

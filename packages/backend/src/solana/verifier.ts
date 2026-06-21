@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { uiAmountToRaw, rawToUiAmount } from "@guess-room/shared";
+import { uiAmountToRaw, rawToUiAmount } from "@room-royale/shared";
 
 export interface HoldingResult {
   /** Whether the wallet meets the minimum holding requirement. */

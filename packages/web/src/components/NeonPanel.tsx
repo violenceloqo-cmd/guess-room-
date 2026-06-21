@@ -9,8 +9,8 @@ interface NeonPanelProps {
 }
 
 /**
- * The core surface primitive for the neon look: a translucent dark glass card
- * with a colored neon border + outer glow. Replaces the old hand-drawn RoughBox.
+ * Core surface primitive: translucent glass card with a colored royale border + glow.
+ * Replaces the old hand-drawn RoughBox.
  * The glow color is exposed as the `--glow` CSS var so child styles can reuse it.
  */
 export function NeonPanel({ children, className, glow, style }: NeonPanelProps) {

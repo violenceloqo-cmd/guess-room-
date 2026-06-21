@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { PublicKey } from "@solana/web3.js";
-import { solToLamports, lamportsToSol } from "@guess-room/shared";
+import { solToLamports, lamportsToSol } from "@room-royale/shared";
 import { getEnv } from "../config/env.js";
 import { getConnection, getHotWallet } from "../solana/connection.js";
 import { TokenGate } from "../solana/verifier.js";

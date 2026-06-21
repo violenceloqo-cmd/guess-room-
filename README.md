@@ -1,4 +1,4 @@
-# Guess Room — Solana Stream Game
+# Room Royale — Solana Stream Game
 
 An interactive, streamed guessing game. Players hold a [pump.fun](https://pump.fun) token, paste their Solana address, and pick **1 of 10 rooms** each round. Every minute the backend picks a **random winning room**; everyone who chose it splits that round's SOL pool, auto-paid from a hot wallet. The whole thing is rendered in a hand-drawn **pencil / stickman** style for streaming, with an OBS overlay.
 
@@ -95,10 +95,10 @@ The fastest path is the website:
 ## Going live — runbook
 
 1. **Devnet rehearsal first.** Keep `SOLANA_CLUSTER=devnet` and `DRY_RUN=true`.
-   - `npm run token:create --workspace @guess-room/backend -- <yourWallet>` to mint a test token (needs a funded devnet hot wallet).
+   - `npm run token:create --workspace @room-royale/backend -- <yourWallet>` to mint a test token (needs a funded devnet hot wallet).
    - Set `TOKEN_MINT`, run the backend, open `/`, and play a few rounds. Watch settlement in the logs.
 2. **Flip to real dry-run on mainnet.** `SOLANA_CLUSTER=mainnet-beta`, real `TOKEN_MINT`, but `DRY_RUN=true`. Confirm winners are detected and shares computed (no SOL sent yet).
-3. **Fund the hot wallet** with only a small float (a few rounds' worth). Verify with `npm run wallet:info --workspace @guess-room/backend`.
+3. **Fund the hot wallet** with only a small float (a few rounds' worth). Verify with `npm run wallet:info --workspace @room-royale/backend`.
 4. **Go live.** Set `DRY_RUN=false`. The startup banner will warn `LIVE MAINNET PAYOUTS ENABLED`. Caps (`MAX_PAYOUT_SOL`, `MAX_ROUND_PAYOUT_SOL`) and the balance guard protect you.
 5. **Stream.** In OBS add a Browser Source pointing at the deployed `/overlay` URL (transparent). Drive the game from `/host`.
 

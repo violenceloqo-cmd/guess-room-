@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { occupantId, ROOM_COUNT, type RoundResultPublic } from "@guess-room/shared";
+import { occupantId, ROOM_COUNT, type RoundResultPublic } from "@room-royale/shared";
 import { useGameState } from "./hooks/useGameState";
 import { useCountdown } from "./hooks/useCountdown";
 import { postGuess } from "./lib/api";
@@ -12,11 +12,14 @@ import { WinnerReveal } from "./components/WinnerReveal";
 import { HowItWorks } from "./components/HowItWorks";
 import { ActivityFeed } from "./components/ActivityFeed";
 
-const WALLET_KEY = "gr_wallet";
+const WALLET_KEY = "rr_wallet";
+const LEGACY_WALLET_KEY = "gr_wallet";
 
 export default function App() {
   const { state, connected } = useGameState();
-  const [wallet, setWalletState] = useState(() => localStorage.getItem(WALLET_KEY) ?? "");
+  const [wallet, setWalletState] = useState(
+    () => localStorage.getItem(WALLET_KEY) ?? localStorage.getItem(LEGACY_WALLET_KEY) ?? "",
+  );
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
   const [joinedRoom, setJoinedRoom] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);

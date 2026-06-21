@@ -2,11 +2,11 @@ import { PublicKey } from "@solana/web3.js";
 import { getEnv } from "../config/env.js";
 import { getConnection, getHotWallet, toPublicKey } from "../solana/connection.js";
 import { getBalanceLamports } from "../solana/payout.js";
-import { lamportsToSol, solToLamports } from "@guess-room/shared";
+import { lamportsToSol, solToLamports } from "@room-royale/shared";
 
 /**
  * Request a devnet airdrop. Usage:
- *   npm run wallet:airdrop --workspace @guess-room/backend -- [address] [sol]
+ *   npm run wallet:airdrop --workspace @room-royale/backend -- [address] [sol]
  * Defaults to the hot wallet and 2 SOL.
  */
 async function main() {

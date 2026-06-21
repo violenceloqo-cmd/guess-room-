@@ -5,7 +5,7 @@ import {
   type RoundResultPublic,
   type PayoutPublic,
   type RoundStatus,
-} from "@guess-room/shared";
+} from "@room-royale/shared";
 import { createLogger } from "../util/logger.js";
 import { buildEliminationOrder } from "./rng.js";
 import type {

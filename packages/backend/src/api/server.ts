@@ -1,7 +1,7 @@
 import Fastify, { type FastifyInstance, type FastifyReply } from "fastify";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
-import { solToLamports, type ApiError } from "@guess-room/shared";
+import { solToLamports, type ApiError } from "@room-royale/shared";
 import { getEnv } from "../config/env.js";
 import { isValidAddress } from "../solana/connection.js";
 import type { BuiltEngine } from "../engine/factory.js";

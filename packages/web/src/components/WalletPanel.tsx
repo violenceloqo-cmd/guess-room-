@@ -1,4 +1,4 @@
-import { getRoom, isLikelySolanaAddress } from "@guess-room/shared";
+import { getRoom, isLikelySolanaAddress } from "@room-royale/shared";
 import { NeonPanel } from "./NeonPanel";
 
 export interface PanelMessage {

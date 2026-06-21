@@ -7,13 +7,13 @@ const log = createLogger("main");
 
 async function main() {
   const env = getEnv();
-  log.info(`starting Guess Room backend (cluster=${env.SOLANA_CLUSTER}, dryRun=${env.DRY_RUN})`);
+  log.info(`starting Room Royale backend (cluster=${env.SOLANA_CLUSTER}, dryRun=${env.DRY_RUN})`);
 
   const built = await buildEngine();
 
   // Loud safety summary so a misconfigured mainnet launch is obvious at a glance.
   const banner = [
-    "────────────── Guess Room ──────────────",
+    "────────────── Room Royale ──────────────",
     `  cluster:        ${env.SOLANA_CLUSTER}`,
     `  payouts:        ${env.DRY_RUN ? "DRY-RUN (no real SOL)" : "LIVE — REAL SOL WILL BE SENT"}`,
     `  store:          ${built.usingSupabase ? "Supabase" : "in-memory"}`,

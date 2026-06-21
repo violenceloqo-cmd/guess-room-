@@ -1,5 +1,5 @@
 {
-  "name": "@guess-room/web",
+  "name": "@room-royale/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@guess-room/shared": "*",
+    "@room-royale/shared": "*",
     "@supabase/supabase-js": "^2.45.0",
     "framer-motion": "^11.11.0",
     "react": "^18.3.1",

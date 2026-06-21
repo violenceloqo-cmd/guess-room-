@@ -1,7 +1,7 @@
 import { getEnv } from "../config/env.js";
 import { getConnection, getHotWallet } from "../solana/connection.js";
 import { getBalanceLamports } from "../solana/payout.js";
-import { lamportsToSol } from "@guess-room/shared";
+import { lamportsToSol } from "@room-royale/shared";
 
 /** Prints the hot wallet address + balance for the configured cluster. */
 async function main() {

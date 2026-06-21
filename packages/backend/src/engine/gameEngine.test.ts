@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import type { RoundResultPublic } from "@guess-room/shared";
+import type { RoundResultPublic } from "@room-royale/shared";
 import { GameEngine } from "./gameEngine.js";
 import { PureSettlement } from "./settlement.js";
 import type { EngineConfig } from "./types.js";

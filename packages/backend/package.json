@@ -1,5 +1,5 @@
 {
-  "name": "@guess-room/backend",
+  "name": "@room-royale/backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -17,7 +17,7 @@
     "payout:test": "tsx src/scripts/send-test.ts"
   },
   "dependencies": {
-    "@guess-room/shared": "*",
+    "@room-royale/shared": "*",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.95.4",
     "@supabase/supabase-js": "^2.45.0",

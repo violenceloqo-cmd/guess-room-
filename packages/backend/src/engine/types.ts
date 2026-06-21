@@ -1,4 +1,4 @@
-import type { PayoutStatus, RoundStatus } from "@guess-room/shared";
+import type { PayoutStatus, RoundStatus } from "@room-royale/shared";
 
 /** A single player's current pick for a round (latest one wins until lock). */
 export interface GuessRecord {

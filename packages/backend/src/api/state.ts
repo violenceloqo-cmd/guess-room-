@@ -1,4 +1,4 @@
-import type { GameStatePublic } from "@guess-room/shared";
+import type { GameStatePublic } from "@room-royale/shared";
 import type { Env } from "../config/env.js";
 import type { EngineSnapshot } from "../engine/gameEngine.js";
 

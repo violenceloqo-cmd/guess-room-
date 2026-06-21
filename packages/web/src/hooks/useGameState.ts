@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { GameStatePublic } from "@guess-room/shared";
+import type { GameStatePublic } from "@room-royale/shared";
 import { fetchState } from "../lib/api";
 import { supabase } from "../lib/supabase";
 
@@ -49,7 +49,7 @@ export function useGameState(pollMs = 1500): UseGameState {
 
     // Realtime "refetch" signal.
     const channel = supabase
-      ?.channel("guess-room")
+      ?.channel("room-royale")
       .on("postgres_changes", { event: "*", schema: "public", table: "rounds" }, () => void load())
       .on("postgres_changes", { event: "*", schema: "public", table: "guesses" }, () => void load())
       .on("postgres_changes", { event: "*", schema: "public", table: "payouts" }, () => void load())
