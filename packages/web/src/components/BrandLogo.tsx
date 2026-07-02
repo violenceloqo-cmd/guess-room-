@@ -1,4 +1,4 @@
-import { ROOM_COLORS } from "../lib/colors";
+import { roomColor } from "../lib/colors";
 import { Mascot, type MascotFace, type MascotPose } from "./Mascot";
 
 interface DoorConfig {
@@ -9,16 +9,16 @@ interface DoorConfig {
 }
 
 const DOORS: DoorConfig[] = [
-  { color: ROOM_COLORS[0], pose: "wave", face: "smile" },
-  { color: ROOM_COLORS[1], pose: "idle", face: "surprised" },
-  { color: ROOM_COLORS[2], pose: "think", face: "happy" },
-  { color: ROOM_COLORS[3], pose: "cheer", face: "happy" },
-  { color: ROOM_COLORS[4], pose: "idle", face: "surprised" },
-  { color: ROOM_COLORS[5], pose: "wave", face: "smile" },
-  { color: ROOM_COLORS[6], pose: "idle", face: "surprised" },
-  { color: ROOM_COLORS[7], pose: "wave", face: "smile" },
-  { color: ROOM_COLORS[8], pose: "think", face: "neutral" },
-  { color: ROOM_COLORS[9], pose: "wave", face: "happy", crown: true },
+  { color: roomColor(1), pose: "wave", face: "smile" },
+  { color: roomColor(2), pose: "idle", face: "surprised" },
+  { color: roomColor(3), pose: "think", face: "happy" },
+  { color: roomColor(4), pose: "cheer", face: "happy" },
+  { color: roomColor(5), pose: "idle", face: "surprised" },
+  { color: roomColor(6), pose: "wave", face: "smile" },
+  { color: roomColor(7), pose: "idle", face: "surprised" },
+  { color: roomColor(8), pose: "wave", face: "smile" },
+  { color: roomColor(9), pose: "think", face: "neutral" },
+  { color: roomColor(10), pose: "wave", face: "happy", crown: true },
 ];
 
 interface BrandLogoProps {
