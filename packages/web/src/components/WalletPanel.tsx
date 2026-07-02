@@ -1,4 +1,4 @@
-import { getRoom, isLikelySolanaAddress } from "@room-royale/shared";
+import { getRoom, isLikelySolanaAddress, TOKEN_TICKER } from "@room-royale/shared";
 import { NeonPanel } from "./NeonPanel";
 
 export interface PanelMessage {
@@ -14,6 +14,8 @@ interface WalletPanelProps {
   submitting: boolean;
   canGuess: boolean;
   message: PanelMessage | null;
+  tokenMinHold?: number | null;
+  tokenMint?: string | null;
   onSubmit: () => void;
 }
 
@@ -25,6 +27,8 @@ export function WalletPanel({
   submitting,
   canGuess,
   message,
+  tokenMinHold,
+  tokenMint,
   onSubmit,
 }: WalletPanelProps) {
   const walletOk = isLikelySolanaAddress(wallet.trim());
@@ -46,6 +50,9 @@ export function WalletPanel({
       <p className="hint">
         Paste your Solana wallet (where winnings get sent), choose one room, and
         lock it in before the timer ends. You can change rooms until the doors close.
+        {tokenMint && tokenMinHold
+          ? ` You must hold at least ${tokenMinHold.toLocaleString()} ${TOKEN_TICKER} to play.`
+          : ""}
       </p>
       <div className="wallet-row">
         <input

@@ -142,6 +142,8 @@ export default function App() {
           submitting={submitting}
           canGuess={status === "open"}
           message={message}
+          tokenMinHold={state?.tokenMinHold}
+          tokenMint={state?.tokenMint}
           onSubmit={onSubmit}
         />
         <ActivityFeed cluster={state?.cluster} />

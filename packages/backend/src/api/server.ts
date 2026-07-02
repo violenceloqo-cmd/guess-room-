@@ -1,7 +1,7 @@
 import Fastify, { type FastifyInstance, type FastifyReply } from "fastify";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
-import { solToLamports, type ApiError } from "@room-royale/shared";
+import { solToLamports, TOKEN_TICKER, type ApiError } from "@room-royale/shared";
 import { getEnv } from "../config/env.js";
 import { isValidAddress } from "../solana/connection.js";
 import type { BuiltEngine } from "../engine/factory.js";
@@ -70,7 +70,7 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
             reply,
             403,
             "not_holding",
-            `Wallet must hold at least ${env.TOKEN_MIN_HOLD} tokens to play`,
+            `Wallet must hold at least ${env.TOKEN_MIN_HOLD} ${TOKEN_TICKER} to play`,
           );
         }
       } catch (err) {
