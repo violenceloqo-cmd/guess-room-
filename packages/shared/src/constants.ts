@@ -1,7 +1,7 @@
 /** Cross-cutting defaults. Authoritative runtime values come from backend env. */
 
 /** Display ticker for the project token. */
-export const TOKEN_TICKER = "$ROOM";
+export const TOKEN_TICKER = "$DOOR";
 
 export const DEFAULTS = {
   roundDurationSeconds: 60,

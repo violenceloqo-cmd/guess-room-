@@ -1,6 +1,6 @@
 import type { GameStatePublic } from "@room-royale/shared";
 import { formatSol, TOKEN_TICKER } from "@room-royale/shared";
-import { BrandMark } from "./BrandMark";
+import { BrandLogo } from "./BrandLogo";
 import { NeonPanel } from "./NeonPanel";
 
 interface HeaderProps {
@@ -18,14 +18,11 @@ export function Header({ state, connected, onHelp }: HeaderProps) {
   return (
     <header className="header">
       <div className="brand">
-        <BrandMark size={56} className="brand-mark" />
-        <div>
-          <h1 className="title">Room Royale</h1>
-          <div className="subtitle">
-            <span className={`conn-dot ${connected ? "ok" : ""}`} />
-            {connected ? "live" : "reconnecting…"} · {state?.cluster ?? "devnet"}
-            {state?.tokenMint ? ` · hold ${state.tokenMinHold} ${TOKEN_TICKER}` : ""}
-          </div>
+        <BrandLogo className="compact" mascotSize={88} />
+        <div className="subtitle brand-status">
+          <span className={`conn-dot ${connected ? "ok" : ""}`} />
+          {connected ? "live" : "reconnecting…"} · {state?.cluster ?? "devnet"}
+          {state?.tokenMint ? ` · hold ${state.tokenMinHold} ${TOKEN_TICKER}` : ""}
         </div>
       </div>
       <div className="stat-row">

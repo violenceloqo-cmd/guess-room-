@@ -72,7 +72,7 @@ export default function Overlay() {
           <div className="overlay-brand">
             <div className="overlay-mark" aria-hidden>♛</div>
             <div>
-              <div className="overlay-title">Room Royale</div>
+              <div className="overlay-title">Guess Door Name</div>
               <div className="overlay-sub">
                 Round #{round?.roundNumber ?? "—"} ·{" "}
                 {round ? formatSol(BigInt(round.poolLamports)) : "—"} pool
