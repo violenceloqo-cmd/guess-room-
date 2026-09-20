@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { occupantId, ROOM_COUNT, type RoundResultPublic } from "@room-royale/shared";
+import { DEFAULTS, occupantId, ROOM_COUNT, type RoundResultPublic } from "@knock-knock/shared";
 import { useGameState } from "./hooks/useGameState";
 import { useCountdown } from "./hooks/useCountdown";
 import { postGuess } from "./lib/api";
@@ -42,6 +42,16 @@ export default function App() {
       : null;
   const seconds = useCountdown(countdownDeadline, state?.serverTime);
 
+  // Length of the phase we're counting down, so the bar can show progress.
+  const totalSeconds = useMemo(() => {
+    if (eliminating) return DEFAULTS.eliminationIntervalSeconds;
+    if (status === "open" && round?.startsAt && round?.endsAt) {
+      const span = (Date.parse(round.endsAt) - Date.parse(round.startsAt)) / 1000;
+      return span > 0 ? Math.round(span) : undefined;
+    }
+    return undefined;
+  }, [eliminating, status, round?.startsAt, round?.endsAt]);
+
   const selfId = useMemo(
     () => (wallet.trim() ? occupantId(wallet.trim()) : null),
     [wallet],
@@ -63,7 +73,7 @@ export default function App() {
 
   const setWallet = useCallback((w: string) => {
     setWalletState(w);
-    localStorage.setItem(WALLET_KEY, w.trim());
+    localStorage.setItem(WALLET_KEY, w.trim().toLowerCase());
   }, []);
 
   // Reset per-round local state when a new round opens.
@@ -122,7 +132,12 @@ export default function App() {
       <FloatingMascots />
       <div className="app">
         <Header state={state} connected={connected} onHelp={() => setShowHelp(true)} />
-        <Countdown seconds={seconds} status={status} roomsLeft={roomsLeft} />
+        <Countdown
+          seconds={seconds}
+          status={status}
+          roomsLeft={roomsLeft}
+          totalSeconds={totalSeconds}
+        />
         <RoomGrid
           roomCounts={round?.roomCounts ?? {}}
           occupants={occupants}
@@ -142,8 +157,7 @@ export default function App() {
           submitting={submitting}
           canGuess={status === "open"}
           message={message}
-          tokenMinHold={state?.tokenMinHold}
-          tokenMint={state?.tokenMint}
+          chainId={state?.chainId}
           onSubmit={onSubmit}
         />
         <ActivityFeed cluster={state?.cluster} />

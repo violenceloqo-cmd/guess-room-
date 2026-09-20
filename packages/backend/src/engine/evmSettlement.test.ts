@@ -1,9 +1,9 @@
 import { test, expect, vi } from "vitest";
 import { MemoryStore } from "../db/memoryStore.js";
-import { SolanaSettlement, type PayResult } from "./solanaSettlement.js";
+import { EvmSettlement, type PayResult } from "./evmSettlement.js";
 import type { RoundData, SettlementInput } from "./types.js";
 
-const POOL = 1_000_000_000n; // 1 SOL
+const POOL = 10n ** 18n; // 1 ETH
 const WINNING_ROOM = 7;
 
 function makeRound(): RoundData {
@@ -17,6 +17,10 @@ function makeRound(): RoundData {
     poolLamports: POOL,
     winningRoom: WINNING_ROOM,
     guesses: new Map(),
+    pendingWinner: WINNING_ROOM,
+    eliminationOrder: [],
+    eliminatedRooms: [],
+    nextEliminationAtMs: null,
   };
 }
 
@@ -33,19 +37,19 @@ function makeSettlement(opts: {
   hotWalletBalance?: bigint;
 }) {
   const store = opts.store ?? new MemoryStore();
-  const pay = vi.fn(async (_wallet: string, _lamports: bigint): Promise<PayResult> => ({
+  const pay = vi.fn(async (_wallet: string, _wei: bigint): Promise<PayResult> => ({
     signature: opts.dryRun ? null : `sig-${_wallet}`,
     dryRun: opts.dryRun ?? false,
   }));
-  const settlement = new SolanaSettlement({
+  const settlement = new EvmSettlement({
     verifyHolding: async (wallet) => ({
       holds: opts.holders.has(wallet),
       rawAmount: opts.holders.has(wallet) ? 999_999n : 0n,
     }),
     pay,
     store,
-    maxPayoutLamports: opts.maxPayoutLamports ?? 5_000_000_000n,
-    maxRoundPayoutLamports: opts.maxRoundPayoutLamports ?? 10_000_000_000n,
+    maxPayoutLamports: opts.maxPayoutLamports ?? 5n * 10n ** 18n,
+    maxRoundPayoutLamports: opts.maxRoundPayoutLamports ?? 10n * 10n ** 18n,
     rolloverOnNoWinner: true,
     ...(opts.hotWalletBalance !== undefined
       ? { getHotWalletBalance: async () => opts.hotWalletBalance! }
@@ -70,13 +74,13 @@ test("splits pool equally among eligible holders and pays them", async () => {
 
 test("ineligible wallets are filtered out before splitting", async () => {
   const { settlement, pay } = makeSettlement({
-    holders: new Set(["alice"]), // bob no longer holds
+    holders: new Set(["alice"]),
   });
   const outcome = await settlement.settle(makeInput(["alice", "bob"]));
 
   expect(outcome.payouts).toHaveLength(1);
   expect(outcome.payouts[0]!.wallet).toBe("alice");
-  expect(outcome.payouts[0]!.lamports).toBe(POOL); // sole winner gets it all
+  expect(outcome.payouts[0]!.lamports).toBe(POOL);
   expect(pay).toHaveBeenCalledTimes(1);
 });
 
@@ -110,16 +114,15 @@ test("is idempotent: a second settlement never double-pays", async () => {
   await settlement.settle(makeInput(["alice", "bob"]));
   expect(pay).toHaveBeenCalledTimes(2);
 
-  // Re-run settlement for the SAME round id (simulates a crash-replay).
   const second = await settlement.settle(makeInput(["alice", "bob"]));
-  expect(pay).toHaveBeenCalledTimes(2); // not called again
+  expect(pay).toHaveBeenCalledTimes(2);
   expect(second.payouts.every((p) => p.status === "skipped")).toBe(true);
 });
 
 test("per-payout cap marks the payout failed instead of sending", async () => {
   const { settlement, pay } = makeSettlement({
     holders: new Set(["alice"]),
-    maxPayoutLamports: 1n, // pool (1 SOL) far exceeds this
+    maxPayoutLamports: 1n,
   });
   const outcome = await settlement.settle(makeInput(["alice"]));
 
@@ -130,7 +133,7 @@ test("per-payout cap marks the payout failed instead of sending", async () => {
 test("rolls over when the hot wallet can't cover the pool", async () => {
   const { settlement, pay } = makeSettlement({
     holders: new Set(["alice"]),
-    hotWalletBalance: POOL - 1n, // just short of the pool
+    hotWalletBalance: POOL - 1n,
   });
   const outcome = await settlement.settle(makeInput(["alice"]));
 
@@ -153,7 +156,7 @@ test("pays when the hot wallet balance is sufficient", async () => {
 test("per-round cap rolls over without paying", async () => {
   const { settlement, pay } = makeSettlement({
     holders: new Set(["alice"]),
-    maxRoundPayoutLamports: 1n, // pool exceeds the round cap
+    maxRoundPayoutLamports: 1n,
   });
   const outcome = await settlement.settle(makeInput(["alice"]));
 

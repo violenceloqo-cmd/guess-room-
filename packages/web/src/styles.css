@@ -1,17 +1,18 @@
 :root {
-  /* base — deep arena purple */
-  --bg: #0a0612;
-  --bg-2: #120a1e;
+  /* base — deep corridor plum */
+  --bg: #08040f;
+  --bg-2: #110a1d;
   --surface: rgba(28, 16, 44, 0.82);
   --surface-2: rgba(36, 22, 56, 0.72);
-  --line: rgba(244, 197, 66, 0.12);
+  --line: rgba(244, 197, 66, 0.16);
   --text: #f8f2ea;
-  --text-soft: #b8a8c8;
+  --text-soft: #bcadcb;
 
-  /* royale accents */
+  /* knock knock accents */
   --accent: #f4c542; /* gold */
   --accent-2: #e94560; /* crimson */
   --gold: #ffd56a;
+  --brass: #d9a441; /* door hardware */
   --win: #5cdb95;
   --danger: #ff4757;
 
@@ -291,6 +292,26 @@ h3 {
   width: clamp(28px, 4.5vw, 44px);
   height: clamp(58px, 9vw, 88px);
 }
+.brand-tagline {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(11px, 1.6vw, 13px);
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-soft));
+  align-self: center;
+}
+.hold-chip {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--gold);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
 .stat-row {
   display: flex;
   gap: 12px;
@@ -317,7 +338,7 @@ h3 {
 /* ── Countdown ──────────────────────────────────────────────────────── */
 .countdown {
   text-align: center;
-  padding: 16px 18px;
+  padding: 16px 18px 22px;
   margin-bottom: 24px;
   --glow: var(--accent);
 }
@@ -335,6 +356,40 @@ h3 {
   line-height: 1;
   color: var(--accent);
   text-shadow: 0 2px 20px rgba(244, 197, 66, 0.45);
+  /* Fixed-width digits so the timer doesn't shuffle every tick. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+.countdown .secs-unit {
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+/* Thin phase-progress rail hugging the bottom edge of the panel. */
+.countdown-bar {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 9px;
+  height: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--glow, var(--accent)) 14%, transparent);
+  overflow: hidden;
+}
+.countdown-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--glow, var(--accent)) 45%, transparent),
+    var(--glow, var(--accent))
+  );
+  box-shadow: 0 0 10px color-mix(in srgb, var(--glow, var(--accent)) 60%, transparent);
+  transition: transform 0.9s linear;
 }
 .countdown.locked {
   --glow: var(--danger);
@@ -374,6 +429,11 @@ h3 {
   cursor: pointer;
   user-select: none;
   outline: none;
+  border-radius: 110px 110px 20px 20px;
+}
+.room:focus-visible {
+  outline: 2px solid var(--rc);
+  outline-offset: 4px;
 }
 
 /* The card is itself an arched doorway — rounded top, flat base — echoing the
@@ -405,11 +465,30 @@ h3 {
     linear-gradient(180deg, #1a1030 0%, #0c0716 78%);
   z-index: 0;
 }
+/* light spilling out of the doorway onto the corridor floor */
+.room-stage::after {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -14px;
+  height: 26px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--rc) 30%, transparent), transparent 70%);
+  opacity: 0.75;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
 .room:hover .room-stage {
   transform: translateY(-4px);
   box-shadow:
     0 18px 36px rgba(0, 0, 0, 0.5),
     0 0 30px color-mix(in srgb, var(--rc) 45%, transparent);
+}
+.room:hover .room-stage::after {
+  opacity: 1;
+  transform: scaleX(1.1);
 }
 
 /* spotlight beam pouring through the doorway */
@@ -424,17 +503,50 @@ h3 {
 
 .room-head {
   position: absolute;
-  top: 22px;
+  top: 14px;
   left: 0;
   right: 0;
   text-align: center;
   z-index: 3;
   pointer-events: none;
 }
+
+/* Brass knocker hanging at the crown of the arch — the "knock knock" mark. */
+.room-knocker {
+  position: relative;
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  border: 2.5px solid color-mix(in srgb, var(--brass) 80%, var(--rc));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--rc) 45%, transparent);
+  transform-origin: 50% -2px;
+}
+.room-knocker::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 12px;
+  height: 4px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--brass) 75%, transparent);
+}
+.room:hover .room-knocker,
+.room.selected .room-knocker {
+  animation: knock 0.55s ease-in-out;
+}
+@keyframes knock {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(13deg); }
+  60% { transform: rotate(-9deg); }
+}
 .room-no {
   font-family: "Syne", sans-serif;
   font-weight: 800;
-  font-size: 38px;
+  font-size: 34px;
   line-height: 1;
   color: #fff;
   text-shadow:
@@ -448,6 +560,11 @@ h3 {
   text-transform: uppercase;
   color: color-mix(in srgb, var(--rc) 55%, var(--text-soft));
   margin-top: 5px;
+}
+.room-glyph {
+  margin-right: 5px;
+  color: color-mix(in srgb, var(--rc) 85%, transparent);
+  opacity: 0.9;
 }
 
 /* glowing platform the cast stands on */
@@ -718,6 +835,13 @@ h3 {
   box-shadow: 0 0 26px color-mix(in srgb, var(--glow, var(--accent)) 55%, transparent);
   background: color-mix(in srgb, var(--glow, var(--accent)) 26%, rgba(0, 0, 0, 0.4));
 }
+.btn:focus-visible {
+  outline: none;
+}
+.btn:focus-visible .neon-btn-inner {
+  outline: 2px solid color-mix(in srgb, var(--glow, var(--accent)) 85%, transparent);
+  outline-offset: 3px;
+}
 .btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -857,6 +981,19 @@ h3 {
 .reveal-payouts li {
   margin: 3px 0;
   color: var(--text-soft);
+}
+
+/* Respect reduced-motion for the ambient loops and the knocker. */
+@media (prefers-reduced-motion: reduce) {
+  .room-knocker,
+  .room.surviving .room-stage,
+  .countdown.locked,
+  .ticker-track {
+    animation: none !important;
+  }
+  .countdown-bar span {
+    transition: none;
+  }
 }
 
 /* ── Misc ───────────────────────────────────────────────────────────── */

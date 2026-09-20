@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { formatSol, getRoom, shortAddress } from "@room-royale/shared";
+import { DEFAULTS, formatEth, getRoom, shortAddress } from "@knock-knock/shared";
 import { useGameState } from "./hooks/useGameState";
 import { useCountdown } from "./hooks/useCountdown";
 import { RoomGrid } from "./components/RoomGrid";
@@ -16,7 +16,7 @@ interface TickerEntry {
 
 /**
  * Transparent overlay for OBS (add as a Browser Source at /overlay). Shows the
- * live rooms, countdown, pool, the winner reveal, and a recent-winners ticker.
+ * live doors, countdown, pool, the winner reveal, and a recent-winners ticker.
  */
 export default function Overlay() {
   const { state } = useGameState(1000);
@@ -53,11 +53,11 @@ export default function Overlay() {
     } else {
       setFlash({
         room: result.winningRoom,
-        text: `${roomName} wins ${formatSol(BigInt(result.poolLamports))}!`,
+        text: `${roomName} wins ${formatEth(BigInt(result.poolLamports))}!`,
       });
       const entries = result.payouts.map((p) => ({
         id: `${result.roundId}-${p.wallet}`,
-        text: `${shortAddress(p.wallet)} won ${formatSol(BigInt(p.lamports))}`,
+        text: `${shortAddress(p.wallet)} won ${formatEth(BigInt(p.lamports))}`,
       }));
       setWinners((w) => [...entries, ...w].slice(0, 8));
     }
@@ -70,12 +70,12 @@ export default function Overlay() {
       <NeonPanel className="overlay-top" glow="var(--accent)">
         <div className="overlay-top-inner">
           <div className="overlay-brand">
-            <div className="overlay-mark" aria-hidden>♛</div>
+            <div className="overlay-mark" aria-hidden>🚪</div>
             <div>
-              <div className="overlay-title">Guess Door Name</div>
+              <div className="overlay-title">Knock Knock</div>
               <div className="overlay-sub">
                 Round #{round?.roundNumber ?? "—"} ·{" "}
-                {round ? formatSol(BigInt(round.poolLamports)) : "—"} pool
+                {round ? formatEth(BigInt(round.poolLamports)) : "—"} pool
               </div>
             </div>
           </div>
@@ -84,6 +84,7 @@ export default function Overlay() {
               seconds={seconds}
               status={round?.status}
               roomsLeft={10 - eliminatedRooms.length}
+              totalSeconds={eliminating ? DEFAULTS.eliminationIntervalSeconds : undefined}
             />
           </div>
         </div>

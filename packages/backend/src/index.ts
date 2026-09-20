@@ -7,29 +7,27 @@ const log = createLogger("main");
 
 async function main() {
   const env = getEnv();
-  log.info(`starting Room Royale backend (cluster=${env.SOLANA_CLUSTER}, dryRun=${env.DRY_RUN})`);
+  log.info(`starting Knock Knock backend (network=${env.CHAIN_NETWORK}, dryRun=${env.DRY_RUN})`);
 
   const built = await buildEngine();
 
-  // Loud safety summary so a misconfigured mainnet launch is obvious at a glance.
   const banner = [
-    "────────────── Room Royale ──────────────",
-    `  cluster:        ${env.SOLANA_CLUSTER}`,
-    `  payouts:        ${env.DRY_RUN ? "DRY-RUN (no real SOL)" : "LIVE — REAL SOL WILL BE SENT"}`,
+    "────────────── Knock Knock ──────────────",
+    `  network:        ${env.networkName} (${env.CHAIN_NETWORK}, chain ${env.chainId})`,
+    `  payouts:        ${env.DRY_RUN ? "DRY-RUN (no real ETH)" : "LIVE — REAL ETH WILL BE SENT"}`,
     `  store:          ${built.usingSupabase ? "Supabase" : "in-memory"}`,
-    `  token mint:     ${env.TOKEN_MINT ?? "(none — pure settlement)"}`,
-    `  pool/round:     ${env.ROUND_POOL_SOL} SOL`,
-    `  caps:           ${env.MAX_PAYOUT_SOL} SOL/payout · ${env.MAX_ROUND_PAYOUT_SOL} SOL/round`,
+    `  entry:          open — wallet address only`,
+    `  pool/round:     ${env.ROUND_POOL_ETH} ETH`,
+    `  caps:           ${env.MAX_PAYOUT_ETH} ETH/payout · ${env.MAX_ROUND_PAYOUT_ETH} ETH/round`,
     "─────────────────────────────────────────",
   ].join("\n");
   console.log(banner);
-  if (!env.DRY_RUN && env.SOLANA_CLUSTER === "mainnet-beta") {
+  if (!env.DRY_RUN && env.CHAIN_NETWORK === "mainnet") {
     log.warn("LIVE MAINNET PAYOUTS ENABLED — ensure the hot wallet holds only a small float");
   }
 
   const app = await createServer(built);
 
-  // Start the round loop immediately so the game is live on boot.
   await built.engine.start();
 
   await app.listen({ port: env.PORT, host: "0.0.0.0" });

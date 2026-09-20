@@ -1,4 +1,4 @@
-import type { PayoutStatus, RoundStatus } from "@room-royale/shared";
+import type { PayoutStatus, RoundStatus } from "@knock-knock/shared";
 
 /** A single player's current pick for a round (latest one wins until lock). */
 export interface GuessRecord {
@@ -69,8 +69,8 @@ export interface SettlementOutcome {
 
 /**
  * Strategy for turning a chosen winning room into payouts. Phase 2 uses a pure
- * (no-network) implementation; Phase 3 swaps in one that verifies holdings and
- * sends SOL. Keeping this behind an interface is what keeps the engine testable.
+ * (no-network) implementation; production swaps in one that verifies ERC-20
+ * holdings and sends ETH. Keeping this behind an interface keeps the engine testable.
  */
 export interface Settlement {
   settle(input: SettlementInput): Promise<SettlementOutcome>;

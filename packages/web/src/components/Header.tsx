@@ -1,5 +1,5 @@
-import type { GameStatePublic } from "@room-royale/shared";
-import { formatSol, TOKEN_TICKER } from "@room-royale/shared";
+import type { GameStatePublic } from "@knock-knock/shared";
+import { formatEth } from "@knock-knock/shared";
 import { BrandLogo } from "./BrandLogo";
 import { NeonPanel } from "./NeonPanel";
 
@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export function Header({ state, connected, onHelp }: HeaderProps) {
   const pool = state?.currentRound
-    ? formatSol(BigInt(state.currentRound.poolLamports))
+    ? formatEth(BigInt(state.currentRound.poolLamports))
     : "—";
   const roundNo = state?.currentRound?.roundNumber ?? "—";
 
@@ -19,10 +19,10 @@ export function Header({ state, connected, onHelp }: HeaderProps) {
     <header className="header">
       <div className="brand">
         <BrandLogo className="compact" mascotSize={88} />
+        <div className="brand-tagline">Ten doors · one stays open</div>
         <div className="subtitle brand-status">
           <span className={`conn-dot ${connected ? "ok" : ""}`} />
-          {connected ? "live" : "reconnecting…"} · {state?.cluster ?? "devnet"}
-          {state?.tokenMint ? ` · hold ${state.tokenMinHold} ${TOKEN_TICKER}` : ""}
+          {connected ? "live" : "reconnecting…"} · robinhood · {state?.cluster ?? "testnet"}
         </div>
       </div>
       <div className="stat-row">

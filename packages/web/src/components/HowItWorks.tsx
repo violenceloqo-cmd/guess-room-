@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { TOKEN_TICKER } from "@room-royale/shared";
+import { DEFAULTS } from "@knock-knock/shared";
 import { NeonPanel } from "./NeonPanel";
 
 interface HowItWorksProps {
@@ -10,23 +10,23 @@ interface HowItWorksProps {
 const STEPS: { n: string; title: string; body: string }[] = [
   {
     n: "1",
-    title: "Pick a room (60s)",
-    body: "Paste your Solana wallet, then choose one of the 10 rooms. You can switch rooms freely until the 1-minute timer runs out.",
+    title: "Knock on a door (60s)",
+    body: "Connect or paste your EVM wallet on Robinhood Chain, then choose one of the 10 doors. You can switch doors freely until the 1-minute timer runs out.",
   },
   {
     n: "2",
-    title: "Elimination begins",
-    body: "Once picking closes, one room is knocked OUT every 10 seconds. Watch the rooms drop one by one — if your room gets eliminated, you're out for the round.",
+    title: "The knockouts begin",
+    body: "Once picking closes, one door is knocked OUT every 10 seconds. Watch them slam shut one by one — if your door goes, you're out for the round.",
   },
   {
     n: "3",
-    title: "Last room standing wins",
-    body: "After the eliminations, a single room is left standing. That's the winning room.",
+    title: "Last door standing wins",
+    body: "After the knockouts, a single door is still open. That's the winning door.",
   },
   {
     n: "4",
-    title: "Split the 0.5 SOL pot",
-    body: "Everyone who picked the last-standing room splits the 0.5 SOL prize pool equally, paid straight to your wallet. If nobody picked it, the pot rolls over to the next round.",
+    title: `Split the ${DEFAULTS.roundPoolEth} ETH pot`,
+    body: `Everyone behind the last open door splits the ${DEFAULTS.roundPoolEth} ETH prize pool equally, paid straight to your wallet. If nobody picked it, the pot rolls over to the next round.`,
   },
 ];
 
@@ -52,7 +52,8 @@ export function HowItWorks({ open, onClose }: HowItWorksProps) {
             <NeonPanel className="help-card" glow="var(--accent)">
               <h2>How it works</h2>
               <p className="hint">
-                Room Royale is a live elimination game. Hold {TOKEN_TICKER}, pick a room, and survive.
+                Knock Knock is a live elimination game. Drop your wallet address, knock on a door,
+                and survive to the last one standing.
               </p>
               <ol className="help-steps">
                 {STEPS.map((s) => (

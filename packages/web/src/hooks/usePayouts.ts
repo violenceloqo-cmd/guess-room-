@@ -14,7 +14,7 @@ export interface PayoutRow {
  * Live feed of real (on-chain) payouts, newest first. Reads the `payouts` table
  * via the anon Supabase client (read-only RLS) and refetches on any change so
  * the feed updates the moment a winner is paid. Only rows with a signature are
- * returned — i.e. actual transactions you can verify on Solscan.
+ * returned — i.e. actual transactions you can verify on Blockscout.
  */
 export function usePayouts(limit = 30): PayoutRow[] {
   const [rows, setRows] = useState<PayoutRow[]>([]);

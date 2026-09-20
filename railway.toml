@@ -1,4 +1,4 @@
-# Railway config for the Room Royale backend (monorepo root).
+# Railway config for the Knock Knock backend (monorepo root).
 # Service settings → Config file path: /railway.toml (if not auto-detected).
 
 [build]

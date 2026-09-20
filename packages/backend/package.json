@@ -1,5 +1,5 @@
 {
-  "name": "@room-royale/backend",
+  "name": "@knock-knock/backend",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,16 +14,15 @@
     "wallet:airdrop": "tsx src/scripts/airdrop.ts",
     "token:create": "tsx src/scripts/create-test-token.ts",
     "holdings:check": "tsx src/scripts/check-holdings.ts",
-    "payout:test": "tsx src/scripts/send-test.ts"
+    "payout:test": "tsx src/scripts/send-test.ts",
+    "payout:e2e": "tsx src/scripts/payout-e2e.ts"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.0",
     "@fastify/rate-limit": "^10.1.0",
-    "@room-royale/shared": "*",
-    "@solana/spl-token": "^0.4.9",
-    "@solana/web3.js": "^1.95.4",
+    "@knock-knock/shared": "*",
     "@supabase/supabase-js": "^2.45.0",
-    "bs58": "^6.0.0",
+    "viem": "^2.21.0",
     "dotenv": "^16.4.5",
     "fastify": "^5.0.0",
     "ws": "^7.5.11",

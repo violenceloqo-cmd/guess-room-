@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Room } from "@room-royale/shared";
+import type { Room } from "@knock-knock/shared";
 import { AnimatePresence, motion } from "framer-motion";
 import { Character } from "./Character";
 import { avatarColor, roomColor } from "../lib/colors";
@@ -93,8 +93,14 @@ export function RoomCard({
       <div className="room-stage">
         <div className="room-glow" />
         <div className="room-head">
+          <span className="room-knocker" aria-hidden />
           <div className="room-no">{room.id}</div>
-          <div className="room-name">{room.name}</div>
+          <div className="room-name">
+            <span className="room-glyph" aria-hidden>
+              {room.doodle}
+            </span>
+            {room.name}
+          </div>
         </div>
         <div className="room-floor" />
         <div className="room-cast">

@@ -1,10 +1,10 @@
 import { test, expect } from "vitest";
-import type { RoundResultPublic } from "@room-royale/shared";
+import type { RoundResultPublic } from "@knock-knock/shared";
 import { GameEngine } from "./gameEngine.js";
 import { PureSettlement } from "./settlement.js";
 import type { EngineConfig } from "./types.js";
 
-const POOL = 1_000_000_000n; // 1 SOL
+const POOL = 10n ** 18n; // 1 ETH
 
 function makeEngine(opts: {
   pickRoom: () => number;

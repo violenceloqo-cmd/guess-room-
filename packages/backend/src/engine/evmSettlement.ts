@@ -1,4 +1,4 @@
-import { splitAmongWallets } from "@room-royale/shared";
+import { splitAmongWallets } from "@knock-knock/shared";
 import { createLogger } from "../util/logger.js";
 import type {
   ComputedPayout,
@@ -33,11 +33,11 @@ export interface PayResult {
   dryRun: boolean;
 }
 
-export interface SolanaSettlementDeps {
+export interface EvmSettlementDeps {
   /** Re-verify a wallet's holdings at settlement time. */
   verifyHolding: (wallet: string) => Promise<{ holds: boolean; rawAmount: bigint }>;
-  /** Send `lamports` to `wallet`. Honors dry-run internally. */
-  pay: (wallet: string, lamports: bigint) => Promise<PayResult>;
+  /** Send `wei` to `wallet`. Honors dry-run internally. */
+  pay: (wallet: string, wei: bigint) => Promise<PayResult>;
   store: SettlementStorePort;
   maxPayoutLamports: bigint;
   maxRoundPayoutLamports: bigint;
@@ -50,8 +50,8 @@ export interface SolanaSettlementDeps {
   getHotWalletBalance?: () => Promise<bigint>;
 }
 
-/** Per-payout fee headroom (lamports) reserved when checking the balance. */
-const FEE_BUFFER_PER_PAYOUT = 10_000n;
+/** Per-payout gas headroom (0.0001 ETH) reserved when checking the balance. */
+const FEE_BUFFER_PER_PAYOUT = 10n ** 14n;
 
 /**
  * Production settlement: verifies the winning room's players still hold the
@@ -64,8 +64,8 @@ const FEE_BUFFER_PER_PAYOUT = 10_000n;
  *  - hard per-payout and per-round caps abort unsafe transfers
  *  - any failure rolls the pool over rather than losing funds
  */
-export class SolanaSettlement implements Settlement {
-  constructor(private readonly deps: SolanaSettlementDeps) {}
+export class EvmSettlement implements Settlement {
+  constructor(private readonly deps: EvmSettlementDeps) {}
 
   async settle(input: SettlementInput): Promise<SettlementOutcome> {
     const { round, winningRoom, candidateWallets, poolLamports } = input;

@@ -1,4 +1,4 @@
-# Render Blueprint for the Room Royale backend (the always-on game engine).
+# Render Blueprint for the Knock Knock backend (the always-on game engine).
 # Deploy: Render Dashboard → New → Blueprint → pick this repo.
 #
 # IMPORTANT:
@@ -9,23 +9,23 @@
 #  - Secrets (sync:false) are entered in the Render dashboard, never committed.
 services:
   - type: web
+    # Render keys services by name — keep the existing one so the live backend
+    # (and its env vars / URL) survives the rename. Rename in the dashboard if wanted.
     name: room-royale-backend
     runtime: node
     plan: starter
     region: oregon
     numInstances: 1
     healthCheckPath: /health
-    buildCommand: npm install && npm run build:shared && npm run build --workspace @room-royale/backend
+    buildCommand: npm install && npm run build --prefix packages/shared && npm run build --prefix packages/backend
     startCommand: node packages/backend/dist/index.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: SOLANA_CLUSTER
-        value: mainnet-beta
-      - key: TOKEN_MIN_HOLD
-        value: "100000"
-      - key: ROUND_POOL_SOL
-        value: "0.5"
+      - key: CHAIN_NETWORK
+        value: mainnet
+      - key: ROUND_POOL_ETH
+        value: "0.01"
       - key: ROUND_DURATION_SECONDS
         value: "60"
       - key: ROUND_LOCK_BUFFER_SECONDS
@@ -34,16 +34,16 @@ services:
         value: "10"
       - key: ROLLOVER_ON_NO_WINNER
         value: "false"
-      - key: MAX_PAYOUT_SOL
+      - key: MAX_PAYOUT_ETH
         value: "5"
-      - key: MAX_ROUND_PAYOUT_SOL
+      - key: MAX_ROUND_PAYOUT_ETH
         value: "10"
       - key: DRY_RUN
         value: "false"
       # --- Secrets: set these in the Render dashboard (Environment tab) ---
-      - key: SOLANA_RPC_URL
+      - key: RPC_URL
         sync: false
-      - key: TOKEN_MINT
+      - key: TOKEN_ADDRESS
         sync: false
       - key: HOT_WALLET_SECRET
         sync: false

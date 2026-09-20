@@ -7,10 +7,12 @@
 
 /** Stable short id (base36 djb2 hash) for a wallet. */
 export function occupantId(wallet: string): string {
+  // Lowercase so EIP-55 checksum vs lowercase is the same occupant.
+  const key = wallet.trim().toLowerCase();
   let hash = 5381;
-  for (let i = 0; i < wallet.length; i++) {
+  for (let i = 0; i < key.length; i++) {
     // hash * 33 + charCode, kept in 32-bit range
-    hash = (((hash << 5) + hash) + wallet.charCodeAt(i)) | 0;
+    hash = (((hash << 5) + hash) + key.charCodeAt(i)) | 0;
   }
   // unsigned, base36, padded for a consistent look
   return (hash >>> 0).toString(36).padStart(7, "0");

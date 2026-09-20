@@ -61,7 +61,7 @@ export function BrandLogo({ className, mascotSize = 72, showTitle = true }: Bran
           </div>
         ))}
       </div>
-      {showTitle ? <div className="brand-logo-title">Guess Door Name</div> : null}
+      {showTitle ? <div className="brand-logo-title">Knock Knock</div> : null}
     </div>
   );
 }

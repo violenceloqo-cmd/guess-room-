@@ -1,5 +1,5 @@
 /**
- * SPL token amount math. Raw amounts are integers scaled by the mint's
+ * ERC-20 token amount math. Raw amounts are integers scaled by the token's
  * decimals; UI amounts are the human-readable values. BigInt only.
  */
 

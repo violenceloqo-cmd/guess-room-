@@ -1,10 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { PublicKey } from "@solana/web3.js";
-import { solToLamports, lamportsToSol } from "@room-royale/shared";
+import { ethToWei, weiToEth } from "@knock-knock/shared";
 import { getEnv } from "../config/env.js";
-import { getConnection, getHotWallet } from "../solana/connection.js";
-import { TokenGate } from "../solana/verifier.js";
-import { sendSol, getBalanceLamports } from "../solana/payout.js";
+import {
+  getPublicClient,
+  getHotAccount,
+  getWalletClient,
+  toAddress,
+} from "../evm/connection.js";
+import { sendEth, getBalanceWei } from "../evm/payout.js";
 import { MemoryStore } from "../db/memoryStore.js";
 import { SupabaseStore } from "../db/supabaseStore.js";
 import { getServiceClient, isSupabaseConfigured } from "../db/supabaseClient.js";
@@ -12,7 +15,7 @@ import type { Store } from "../db/store.js";
 import { createLogger } from "../util/logger.js";
 import { GameEngine } from "./gameEngine.js";
 import { PureSettlement } from "./settlement.js";
-import { SolanaSettlement } from "./solanaSettlement.js";
+import { EvmSettlement } from "./evmSettlement.js";
 import { pickWinningRoom } from "./rng.js";
 import type { EngineConfig, Settlement } from "./types.js";
 
@@ -23,15 +26,13 @@ export interface BuiltEngine {
   store: Store;
   usingSupabase: boolean;
   usingRealPayouts: boolean;
-  /** Best-effort holdings check for guess-time UX; absent when no token gate. */
-  verifyHolding?: (wallet: string) => Promise<{ holds: boolean; rawAmount: bigint }>;
 }
 
 /**
  * Assemble a fully-wired GameEngine from environment configuration:
- *  - Store:     SupabaseStore when configured, otherwise an in-memory mirror
- *  - Settlement: Solana-backed (verify + pay) when a token mint + hot wallet are
- *               present, otherwise the pure no-network strategy
+ *  - Store:      SupabaseStore when configured, otherwise an in-memory mirror
+ *  - Settlement: EVM-backed (pay ETH) when a hot wallet is present, otherwise
+ *                the pure no-network strategy. Anyone with a valid address can play.
  */
 export async function buildEngine(): Promise<BuiltEngine> {
   const env = getEnv();
@@ -40,7 +41,7 @@ export async function buildEngine(): Promise<BuiltEngine> {
     roundDurationSeconds: env.ROUND_DURATION_SECONDS,
     lockBufferSeconds: env.ROUND_LOCK_BUFFER_SECONDS,
     eliminationIntervalSeconds: env.ELIMINATION_INTERVAL_SECONDS,
-    poolLamports: solToLamports(env.ROUND_POOL_SOL),
+    poolLamports: ethToWei(env.ROUND_POOL_ETH),
     rolloverOnNoWinner: env.ROLLOVER_ON_NO_WINNER,
   };
 
@@ -52,48 +53,40 @@ export async function buildEngine(): Promise<BuiltEngine> {
 
   let settlement: Settlement;
   let usingRealPayouts = false;
-  let verifyHolding:
-    | ((wallet: string) => Promise<{ holds: boolean; rawAmount: bigint }>)
-    | undefined;
 
-  if (env.TOKEN_MINT && env.HOT_WALLET_SECRET) {
-    const connection = getConnection();
-    const hotWallet = getHotWallet();
-    const gate = await TokenGate.create(connection, env.TOKEN_MINT, env.TOKEN_MIN_HOLD);
-    const maxPayoutLamports = solToLamports(env.MAX_PAYOUT_SOL);
-    const maxRoundPayoutLamports = solToLamports(env.MAX_ROUND_PAYOUT_SOL);
+  if (env.HOT_WALLET_SECRET) {
+    const publicClient = getPublicClient();
+    const walletClient = getWalletClient();
+    const hotAccount = getHotAccount();
+    const maxPayoutWei = ethToWei(env.MAX_PAYOUT_ETH);
+    const maxRoundPayoutWei = ethToWei(env.MAX_ROUND_PAYOUT_ETH);
 
-    verifyHolding = async (wallet) => {
-      const r = await gate.verify(new PublicKey(wallet));
-      return { holds: r.holds, rawAmount: r.rawAmount };
-    };
-
-    settlement = new SolanaSettlement({
-      verifyHolding,
-      pay: async (wallet, lamports) =>
-        sendSol(connection, hotWallet, new PublicKey(wallet), lamports, {
-          maxLamports: maxPayoutLamports,
+    settlement = new EvmSettlement({
+      verifyHolding: async () => ({ holds: true, rawAmount: 0n }),
+      pay: async (wallet, wei) => {
+        const to = toAddress(wallet);
+        if (!to) throw new Error(`Invalid payout address: ${wallet}`);
+        return sendEth(publicClient, walletClient, hotAccount, to, wei, {
+          maxWei: maxPayoutWei,
           dryRun: env.DRY_RUN,
-        }),
+        });
+      },
       store,
-      maxPayoutLamports,
-      maxRoundPayoutLamports,
+      maxPayoutLamports: maxPayoutWei,
+      maxRoundPayoutLamports: maxRoundPayoutWei,
       rolloverOnNoWinner: env.ROLLOVER_ON_NO_WINNER,
-      // Only guard on balance for real payouts; in dry-run the wallet may be empty.
       ...(env.DRY_RUN
         ? {}
-        : { getHotWalletBalance: () => getBalanceLamports(connection, hotWallet.publicKey) }),
+        : { getHotWalletBalance: () => getBalanceWei(publicClient, hotAccount.address) }),
     });
     usingRealPayouts = !env.DRY_RUN;
 
-    const balance = await getBalanceLamports(connection, hotWallet.publicKey);
+    const balance = await getBalanceWei(publicClient, hotAccount.address);
+    log.info(`EVM settlement ready (open play, dryRun=${env.DRY_RUN})`);
     log.info(
-      `Solana settlement ready (mint ${env.TOKEN_MINT}, dryRun=${env.DRY_RUN})`,
+      `hot wallet ${hotAccount.address} balance ${weiToEth(balance)} ETH`,
     );
-    log.info(
-      `hot wallet ${hotWallet.publicKey.toBase58()} balance ${lamportsToSol(balance)} SOL`,
-    );
-    if (!env.DRY_RUN && balance < solToLamports(env.ROUND_POOL_SOL)) {
+    if (!env.DRY_RUN && balance < ethToWei(env.ROUND_POOL_ETH)) {
       log.warn(
         "hot wallet balance is below one round's pool — fund it or rounds will roll over",
       );
@@ -101,7 +94,7 @@ export async function buildEngine(): Promise<BuiltEngine> {
   } else {
     settlement = new PureSettlement(env.ROLLOVER_ON_NO_WINNER);
     log.warn(
-      "TOKEN_MINT or HOT_WALLET_SECRET not set — using pure settlement (no verification, no payouts)",
+      "HOT_WALLET_SECRET not set — using pure settlement (no on-chain payouts)",
     );
   }
 
@@ -113,5 +106,5 @@ export async function buildEngine(): Promise<BuiltEngine> {
     persistence: store,
   });
 
-  return { engine, store, usingSupabase, usingRealPayouts, verifyHolding };
+  return { engine, store, usingSupabase, usingRealPayouts };
 }

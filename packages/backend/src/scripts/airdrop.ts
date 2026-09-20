@@ -1,39 +1,32 @@
-import { PublicKey } from "@solana/web3.js";
 import { getEnv } from "../config/env.js";
-import { getConnection, getHotWallet, toPublicKey } from "../solana/connection.js";
-import { getBalanceLamports } from "../solana/payout.js";
-import { lamportsToSol, solToLamports } from "@room-royale/shared";
+import { getHotAccount, toAddress } from "../evm/connection.js";
 
 /**
- * Request a devnet airdrop. Usage:
- *   npm run wallet:airdrop --workspace @room-royale/backend -- [address] [sol]
- * Defaults to the hot wallet and 2 SOL.
+ * Robinhood Chain has no RPC airdrop. This prints how to fund a wallet.
+ * Usage:
+ *   npm run wallet:airdrop --workspace @knock-knock/backend -- [address]
  */
 async function main() {
   const env = getEnv();
-  if (env.SOLANA_CLUSTER !== "devnet") {
-    throw new Error("Airdrops are only available on devnet.");
+  const [addressArg] = process.argv.slice(2);
+  const target = addressArg
+    ? toAddress(addressArg)
+    : getHotAccount().address;
+  if (!target) throw new Error(`Invalid address: ${addressArg}`);
+
+  console.log("Robinhood Chain has no requestAirdrop RPC.");
+  console.log(`Network:  ${env.networkName} (chain ${env.chainId})`);
+  console.log(`Fund this wallet with ETH:`);
+  console.log(`  ${target}`);
+  console.log(`RPC:      ${env.RPC_URL}`);
+  console.log(`Explorer: ${env.explorerUrl}/address/${target}`);
+  if (env.CHAIN_NETWORK === "testnet") {
+    console.log("\nBridge or request testnet ETH, then confirm the balance with:");
+    console.log("  npm run wallet:info --workspace @knock-knock/backend");
+  } else {
+    console.log("\nBridge ETH onto Robinhood Chain mainnet, then:");
+    console.log("  npm run wallet:info --workspace @knock-knock/backend");
   }
-  const connection = getConnection();
-
-  const [addressArg, solArg] = process.argv.slice(2);
-  const target: PublicKey = addressArg
-    ? (toPublicKey(addressArg) ?? throwBadAddress(addressArg))
-    : getHotWallet().publicKey;
-  const sol = solArg ? Number(solArg) : 2;
-
-  console.log(`Requesting ${sol} SOL airdrop to ${target.toBase58()}...`);
-  const sig = await connection.requestAirdrop(target, Number(solToLamports(sol)));
-  const bh = await connection.getLatestBlockhash("confirmed");
-  await connection.confirmTransaction({ signature: sig, ...bh }, "confirmed");
-
-  const balance = await getBalanceLamports(connection, target);
-  console.log("Airdrop confirmed:", sig);
-  console.log("New balance:      ", `${lamportsToSol(balance)} SOL`);
-}
-
-function throwBadAddress(a: string): never {
-  throw new Error(`Invalid address: ${a}`);
 }
 
 main().catch((e) => {

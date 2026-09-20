@@ -11,7 +11,7 @@ interface MascotProps {
 }
 
 /**
- * Rounded capsule mascot — a friendly door-dweller for Room Royale. Matches the
+ * Rounded capsule mascot — a friendly door-dweller for Knock Knock. Matches the
  * brand characters: arched blob body, big dot eyes, a little mouth, stubby arms.
  * `pose` swaps arm positions, `face` swaps the expression, `crown` adds royalty.
  */

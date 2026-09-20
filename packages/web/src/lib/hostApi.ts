@@ -10,7 +10,7 @@ export interface HostConfig {
 
 export interface HostInfo {
   config: HostConfig;
-  caps: { maxPayoutSol: number; maxRoundPayoutSol: number };
+  caps: { maxPayoutEth: number; maxRoundPayoutEth: number };
   dryRun: boolean;
   usingSupabase: boolean;
   usingRealPayouts: boolean;
@@ -39,7 +39,7 @@ export async function stopGame(secret: string): Promise<unknown> {
 }
 
 export interface ConfigUpdate {
-  poolSol?: number;
+  poolEth?: number;
   durationSeconds?: number;
   lockBufferSeconds?: number;
   rolloverOnNoWinner?: boolean;

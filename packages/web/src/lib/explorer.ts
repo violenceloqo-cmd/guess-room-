@@ -1,10 +1,6 @@
-/**
- * Build a Solscan transaction URL for the active cluster. Mainnet needs no
- * query param; devnet/testnet do.
- */
-export function solscanTx(signature: string, cluster?: string): string {
-  const base = `https://solscan.io/tx/${signature}`;
-  if (cluster === "devnet") return `${base}?cluster=devnet`;
-  if (cluster === "testnet") return `${base}?cluster=testnet`;
-  return base;
+import { explorerTxUrl } from "@knock-knock/shared";
+
+/** Blockscout transaction URL for Robinhood Chain. */
+export function chainTx(txHash: string, network?: string): string {
+  return explorerTxUrl(txHash, network);
 }

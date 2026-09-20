@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { formatSol, lamportsToSol } from "@room-royale/shared";
+import { formatEth, weiToEth } from "@knock-knock/shared";
 import { useGameState } from "./hooks/useGameState";
 import {
   getHostInfo,
@@ -26,7 +26,7 @@ export default function HostPanel() {
   const [busy, setBusy] = useState(false);
 
   // form fields
-  const [poolSol, setPoolSol] = useState("");
+  const [poolEth, setPoolEth] = useState("");
   const [duration, setDuration] = useState("");
   const [lockBuffer, setLockBuffer] = useState("");
   const [rollover, setRollover] = useState(true);
@@ -35,7 +35,7 @@ export default function HostPanel() {
     const next = await getHostInfo(s);
     setInfo(next);
     setAuthed(true);
-    setPoolSol(String(lamportsToSol(BigInt(next.config.poolLamports))));
+    setPoolEth(String(weiToEth(BigInt(next.config.poolLamports))));
     setDuration(String(next.config.roundDurationSeconds));
     setLockBuffer(String(next.config.lockBufferSeconds));
     setRollover(next.config.rolloverOnNoWinner);
@@ -83,7 +83,7 @@ export default function HostPanel() {
     run(
       () =>
         updateConfig(secret.trim(), {
-          poolSol: poolSol === "" ? undefined : Number(poolSol),
+          poolEth: poolEth === "" ? undefined : Number(poolEth),
           durationSeconds: duration === "" ? undefined : Number(duration),
           lockBufferSeconds: lockBuffer === "" ? undefined : Number(lockBuffer),
           rolloverOnNoWinner: rollover,
@@ -136,7 +136,7 @@ export default function HostPanel() {
                   <span className="label">Pool</span>
                   <span className="value">
                     {state?.currentRound
-                      ? formatSol(BigInt(state.currentRound.poolLamports))
+                      ? formatEth(BigInt(state.currentRound.poolLamports))
                       : "—"}
                   </span>
                 </NeonPanel>
@@ -155,8 +155,8 @@ export default function HostPanel() {
               <h2>Round settings</h2>
               <div className="host-form">
                 <label>
-                  Prize pool (SOL)
-                  <input className="sketch-input" value={poolSol} onChange={(e) => setPoolSol(e.target.value)} />
+                  Prize pool (ETH)
+                  <input className="sketch-input" value={poolEth} onChange={(e) => setPoolEth(e.target.value)} />
                 </label>
                 <label>
                   Round seconds
@@ -177,9 +177,9 @@ export default function HostPanel() {
 
               {info ? (
                 <p className="hint">
-                  Mode: {info.dryRun ? "DRY-RUN (no real SOL)" : "LIVE PAYOUTS"} · store:{" "}
+                  Mode: {info.dryRun ? "DRY-RUN (no real ETH)" : "LIVE PAYOUTS"} · store:{" "}
                   {info.usingSupabase ? "Supabase" : "in-memory"} · caps:{" "}
-                  {info.caps.maxPayoutSol} SOL/payout, {info.caps.maxRoundPayoutSol} SOL/round
+                  {info.caps.maxPayoutEth} ETH/payout, {info.caps.maxRoundPayoutEth} ETH/round
                 </p>
               ) : null}
               {msg ? <p className={`hint ${msg.kind === "err" ? "error" : ""}`}>{msg.text}</p> : null}

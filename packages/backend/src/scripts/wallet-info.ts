@@ -1,21 +1,22 @@
+import { weiToEth } from "@knock-knock/shared";
 import { getEnv } from "../config/env.js";
-import { getConnection, getHotWallet } from "../solana/connection.js";
-import { getBalanceLamports } from "../solana/payout.js";
-import { lamportsToSol } from "@room-royale/shared";
+import { getPublicClient, getHotAccount } from "../evm/connection.js";
+import { getBalanceWei } from "../evm/payout.js";
 
-/** Prints the hot wallet address + balance for the configured cluster. */
+/** Prints the hot wallet address + ETH balance on Robinhood Chain. */
 async function main() {
   const env = getEnv();
-  const connection = getConnection();
-  const wallet = getHotWallet();
-  const lamports = await getBalanceLamports(connection, wallet.publicKey);
+  const client = getPublicClient();
+  const wallet = getHotAccount();
+  const wei = await getBalanceWei(client, wallet.address);
 
-  console.log("Cluster:     ", env.SOLANA_CLUSTER);
-  console.log("RPC:         ", env.SOLANA_RPC_URL);
-  console.log("Hot wallet:  ", wallet.publicKey.toBase58());
-  console.log("Balance:     ", `${lamportsToSol(lamports)} SOL (${lamports} lamports)`);
+  console.log("Network:     ", env.networkName, `(${env.CHAIN_NETWORK}, chain ${env.chainId})`);
+  console.log("RPC:         ", env.RPC_URL);
+  console.log("Explorer:    ", env.explorerUrl);
+  console.log("Hot wallet:  ", wallet.address);
+  console.log("Balance:     ", `${weiToEth(wei)} ETH (${wei} wei)`);
   console.log("Dry run:     ", env.DRY_RUN);
-  console.log("Token mint:  ", env.TOKEN_MINT ?? "(not set)");
+  console.log("Token:       ", env.TOKEN_ADDRESS ?? "(not set)");
 }
 
 main().catch((e) => {

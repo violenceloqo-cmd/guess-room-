@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { formatSol, occupantId, shortAddress } from "@room-royale/shared";
+import { formatEth, occupantId, shortAddress } from "@knock-knock/shared";
 import { NeonPanel } from "./NeonPanel";
 import { usePayouts } from "../hooks/usePayouts";
 import { avatarColor } from "../lib/colors";
-import { solscanTx } from "../lib/explorer";
+import { chainTx } from "../lib/explorer";
 
 interface ActivityFeedProps {
   cluster?: string;
@@ -38,8 +38,8 @@ export function ActivityFeed({ cluster }: ActivityFeedProps) {
 
       {payouts.length === 0 ? (
         <p className="activity-empty">
-          No payouts yet. When a room wins, every winner shows up here with a
-          Solscan transaction link.
+          No payouts yet. When a door wins, every winner shows up here with a
+          Blockscout transaction link.
         </p>
       ) : (
         <ul className="activity-list">
@@ -50,13 +50,13 @@ export function ActivityFeed({ cluster }: ActivityFeedProps) {
                 <span className="activity-dot" style={{ background: color }} />
                 <span className="activity-wallet mono">{shortAddress(p.wallet)}</span>
                 <span className="activity-amount">
-                  +{formatSol(BigInt(p.lamports))}
+                  +{formatEth(BigInt(p.lamports))}
                 </span>
                 <span className="activity-time">{timeAgo(p.created_at, now)}</span>
                 {p.signature ? (
                   <a
                     className="activity-link"
-                    href={solscanTx(p.signature, cluster)}
+                    href={chainTx(p.signature, cluster)}
                     target="_blank"
                     rel="noreferrer"
                   >

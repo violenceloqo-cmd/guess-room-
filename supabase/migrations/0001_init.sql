@@ -1,9 +1,10 @@
--- Room Royale — initial schema
+-- Knock Knock — initial schema
 -- Backend (service role) is the ONLY writer. Browser clients (anon key) get
 -- read-only access via RLS for live data, and receive updates over Realtime.
 --
--- Money is stored as numeric(20,0) lamports and read back as strings, then
--- parsed into BigInt on the server — never as JS floats.
+-- Money is stored as numeric(78,0) wei (native ETH smallest unit) and read
+-- back as strings, then parsed into BigInt on the server — never as JS floats.
+-- Column names `pool_lamports` / `lamports` are historical; values are wei.
 
 create extension if not exists "pgcrypto";
 
@@ -12,7 +13,7 @@ create table if not exists public.rounds (
   id            uuid primary key,
   round_number  integer not null,
   status        text not null check (status in ('open','locked','settling','settled')),
-  pool_lamports numeric(20,0) not null default 0,
+  pool_lamports numeric(78,0) not null default 0,
   starts_at     timestamptz not null,
   ends_at       timestamptz not null,
   reveal_at     timestamptz not null,
@@ -46,7 +47,7 @@ create table if not exists public.payouts (
   id          uuid primary key default gen_random_uuid(),
   round_id    uuid not null references public.rounds(id) on delete cascade,
   wallet      text not null,
-  lamports    numeric(20,0) not null,
+  lamports    numeric(78,0) not null,
   status      text not null check (status in ('pending','sent','confirmed','failed','skipped')),
   signature   text,
   created_at  timestamptz not null default now(),

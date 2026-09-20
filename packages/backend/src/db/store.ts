@@ -1,4 +1,4 @@
-import type { PayoutStatus, RoundStatus } from "@room-royale/shared";
+import type { PayoutStatus, RoundStatus } from "@knock-knock/shared";
 import type { RoundData } from "../engine/types.js";
 
 export interface RoundPatch {

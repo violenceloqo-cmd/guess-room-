@@ -1,9 +1,9 @@
 import Fastify, { type FastifyInstance, type FastifyReply } from "fastify";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
-import { solToLamports, TOKEN_TICKER, type ApiError } from "@room-royale/shared";
+import { ethToWei, type ApiError } from "@knock-knock/shared";
 import { getEnv } from "../config/env.js";
-import { isValidAddress } from "../solana/connection.js";
+import { isValidAddress } from "../evm/connection.js";
 import type { BuiltEngine } from "../engine/factory.js";
 import { createLogger } from "../util/logger.js";
 import { buildGameState } from "./state.js";
@@ -56,31 +56,11 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
     const { wallet, room } = parsed.data;
 
     if (!isValidAddress(wallet)) {
-      return fail(reply, 400, "invalid_wallet", "That is not a valid Solana address");
+      return fail(reply, 400, "invalid_wallet", "That is not a valid EVM address");
     }
+    const normalized = wallet.toLowerCase();
 
-    // Best-effort holdings gate at guess time (authoritative re-check at settle).
-    let verified = true;
-    if (built.verifyHolding) {
-      try {
-        const r = await built.verifyHolding(wallet);
-        verified = r.holds;
-        if (!verified) {
-          return fail(
-            reply,
-            403,
-            "not_holding",
-            `Wallet must hold at least ${env.TOKEN_MIN_HOLD} ${TOKEN_TICKER} to play`,
-          );
-        }
-      } catch (err) {
-        // RPC hiccup — don't block the player; settlement will re-verify.
-        log.warn(`guess-time verify failed for ${wallet}`, err);
-        verified = false;
-      }
-    }
-
-    const result = engine.addGuess(wallet, room);
+    const result = engine.addGuess(normalized, room);
     if (!result.accepted) {
       const code = result.reason ?? "rejected";
       const status = code === "no_active_round" ? 409 : 400;
@@ -88,7 +68,7 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
     }
 
     const round = engine.getSnapshot().currentRound;
-    return reply.send({ ok: true, roundId: round?.id ?? null, room, verified });
+    return reply.send({ ok: true, roundId: round?.id ?? null, room, verified: true });
   });
 
   // ── Host (secret-protected) ────────────────────────────────────────────────
@@ -112,7 +92,7 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
 
     host.get("/host/config", async () => ({
       config: serializeConfig(engine.getConfig()),
-      caps: { maxPayoutSol: env.MAX_PAYOUT_SOL, maxRoundPayoutSol: env.MAX_ROUND_PAYOUT_SOL },
+      caps: { maxPayoutEth: env.MAX_PAYOUT_ETH, maxRoundPayoutEth: env.MAX_ROUND_PAYOUT_ETH },
       dryRun: env.DRY_RUN,
       usingSupabase: built.usingSupabase,
       usingRealPayouts: built.usingRealPayouts,
@@ -123,9 +103,9 @@ export async function createServer(built: BuiltEngine): Promise<FastifyInstance>
       if (!parsed.success) {
         return fail(reply, 400, "invalid_body", parsed.error.issues[0]?.message ?? "Invalid body");
       }
-      const { poolSol, durationSeconds, lockBufferSeconds, rolloverOnNoWinner } = parsed.data;
+      const { poolEth, durationSeconds, lockBufferSeconds, rolloverOnNoWinner } = parsed.data;
       const updated = engine.updateConfig({
-        ...(poolSol !== undefined ? { poolLamports: solToLamports(poolSol) } : {}),
+        ...(poolEth !== undefined ? { poolLamports: ethToWei(poolEth) } : {}),
         ...(durationSeconds !== undefined ? { roundDurationSeconds: durationSeconds } : {}),
         ...(lockBufferSeconds !== undefined ? { lockBufferSeconds } : {}),
         ...(rolloverOnNoWinner !== undefined ? { rolloverOnNoWinner } : {}),

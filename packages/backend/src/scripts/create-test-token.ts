@@ -1,51 +1,49 @@
-import {
-  createMint,
-  getOrCreateAssociatedTokenAccount,
-  mintTo,
-} from "@solana/spl-token";
+import { erc20Abi } from "viem";
+import { PONS_LAUNCHPAD_URL, PONS_EXPLORE_URL } from "@knock-knock/shared";
 import { getEnv } from "../config/env.js";
-import { getConnection, getHotWallet, toPublicKey } from "../solana/connection.js";
+import { getPublicClient, toAddress } from "../evm/connection.js";
 
 /**
- * Creates a throwaway SPL token on devnet so the engine can be tested end-to-end
- * before the real pump.fun launch. Mints `supply` to the hot wallet (and an
- * optional extra recipient). Usage:
- *   npm run token:create --workspace @room-royale/backend -- [recipient] [supplyUi]
+ * The project token launches on Pons (Robinhood Chain). This script prints
+ * those steps, or inspects an existing ERC-20 if you pass its address.
  *
- * Copy the printed mint into TOKEN_MINT in your .env.
+ * Usage:
+ *   npm run token:create --workspace @knock-knock/backend
+ *   npm run token:create --workspace @knock-knock/backend -- 0xYourToken
  */
 async function main() {
   const env = getEnv();
-  if (env.SOLANA_CLUSTER !== "devnet") {
-    throw new Error("create-test-token is devnet-only.");
-  }
-  const connection = getConnection();
-  const payer = getHotWallet();
+  const [tokenArg] = process.argv.slice(2);
 
-  const [recipientArg, supplyArg] = process.argv.slice(2);
-  const decimals = 6;
-  const supplyUi = supplyArg ? Number(supplyArg) : 1_000_000;
-  const supplyRaw = BigInt(Math.round(supplyUi * 10 ** decimals));
-
-  console.log("Creating test mint (decimals=6)...");
-  const mint = await createMint(connection, payer, payer.publicKey, null, decimals);
-  console.log("Mint:", mint.toBase58());
-
-  const recipients = [payer.publicKey];
-  if (recipientArg) {
-    const extra = toPublicKey(recipientArg);
-    if (!extra) throw new Error(`Invalid recipient: ${recipientArg}`);
-    recipients.push(extra);
+  if (!tokenArg) {
+    console.log("Launch the game token on Pons (Robinhood Chain launchpad):");
+    console.log(`  1. Open ${PONS_LAUNCHPAD_URL}`);
+    console.log("  2. Connect an EVM wallet on Robinhood Chain");
+    console.log("  3. Create the coin (name, ticker, image) and launch");
+    console.log("  4. Copy the token contract address");
+    console.log("  5. Set TOKEN_ADDRESS in .env and restart the backend");
+    console.log("");
+    console.log(`Browse launches: ${PONS_EXPLORE_URL}`);
+    console.log(`Network: ${env.networkName} (chain ${env.chainId})`);
+    return;
   }
 
-  for (const owner of recipients) {
-    const ata = await getOrCreateAssociatedTokenAccount(connection, payer, mint, owner);
-    await mintTo(connection, payer, mint, ata.address, payer, supplyRaw);
-    console.log(`Minted ${supplyUi} to ${owner.toBase58()} (ata ${ata.address.toBase58()})`);
-  }
+  const token = toAddress(tokenArg);
+  if (!token) throw new Error(`Invalid token address: ${tokenArg}`);
 
-  console.log("\nDone. Set this in your .env:");
-  console.log(`TOKEN_MINT=${mint.toBase58()}`);
+  const client = getPublicClient();
+  const [decimals, symbol, name] = await Promise.all([
+    client.readContract({ address: token, abi: erc20Abi, functionName: "decimals" }),
+    client.readContract({ address: token, abi: erc20Abi, functionName: "symbol" }).catch(() => "?"),
+    client.readContract({ address: token, abi: erc20Abi, functionName: "name" }).catch(() => "?"),
+  ]);
+
+  console.log("Token:    ", name, `(${symbol})`);
+  console.log("Address:  ", token);
+  console.log("Decimals: ", decimals);
+  console.log("Network:  ", env.networkName, `(chain ${env.chainId})`);
+  console.log("\nSet this in your .env:");
+  console.log(`TOKEN_ADDRESS=${token}`);
 }
 
 main().catch((e) => {

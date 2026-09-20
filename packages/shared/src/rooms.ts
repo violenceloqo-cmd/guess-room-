@@ -1,7 +1,7 @@
 /**
- * The 10 rooms players can guess. IDs are stable (1..10) and used as the
+ * The 10 doors players can knock on. IDs are stable (1..10) and used as the
  * source of truth across the engine, DB, and UI. Names/themes are purely
- * cosmetic and match the hand-drawn stickman aesthetic.
+ * cosmetic and follow the door colors of the neon arcade aesthetic.
  */
 
 export interface Room {
@@ -9,23 +9,23 @@ export interface Room {
   id: number;
   /** Display name shown in the UI / overlay. */
   name: string;
-  /** Short doodle label used on the pencil-drawn door. */
+  /** Short glyph engraved on the door plaque. */
   doodle: string;
 }
 
 export const ROOM_COUNT = 10;
 
 export const ROOMS: readonly Room[] = [
-  { id: 1, name: "Squiggle Cellar", doodle: "~" },
-  { id: 2, name: "Wobble Loft", doodle: "≈" },
-  { id: 3, name: "Smudge Vault", doodle: "▓" },
-  { id: 4, name: "Doodle Den", doodle: "✎" },
-  { id: 5, name: "Scribble Hall", doodle: "✶" },
-  { id: 6, name: "Eraser Annex", doodle: "□" },
-  { id: 7, name: "Inkblot Attic", doodle: "●" },
-  { id: 8, name: "Sketch Pantry", doodle: "◇" },
-  { id: 9, name: "Crosshatch Cave", doodle: "#" },
-  { id: 10, name: "Stickman Studio", doodle: "☆" },
+  { id: 1, name: "Ember Gate", doodle: "▲" },
+  { id: 2, name: "Amber Arch", doodle: "◐" },
+  { id: 3, name: "Gilded Hatch", doodle: "✦" },
+  { id: 4, name: "Lime Portal", doodle: "◇" },
+  { id: 5, name: "Jade Threshold", doodle: "❖" },
+  { id: 6, name: "Cyan Vault", doodle: "◍" },
+  { id: 7, name: "Azure Passage", doodle: "≋" },
+  { id: 8, name: "Violet Alcove", doodle: "✧" },
+  { id: 9, name: "Orchid Landing", doodle: "❉" },
+  { id: 10, name: "Rose Chamber", doodle: "☾" },
 ] as const;
 
 export const ROOM_IDS: readonly number[] = ROOMS.map((r) => r.id);

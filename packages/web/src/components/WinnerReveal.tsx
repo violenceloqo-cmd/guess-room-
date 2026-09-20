@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  formatSol,
+  formatEth,
   getRoom,
   shortAddress,
   type RoundResultPublic,
-} from "@room-royale/shared";
+} from "@knock-knock/shared";
 import { NeonPanel } from "./NeonPanel";
 import { Character } from "./Character";
 import { roomColor } from "../lib/colors";
@@ -16,7 +16,9 @@ interface WinnerRevealProps {
 }
 
 export function WinnerReveal({ result, wallet, onClose }: WinnerRevealProps) {
-  const myPayout = result?.payouts.find((p) => p.wallet === wallet.trim());
+  const myPayout = result?.payouts.find(
+    (p) => p.wallet.toLowerCase() === wallet.trim().toLowerCase(),
+  );
   const iWon = Boolean(myPayout);
   const room = result ? getRoom(result.winningRoom) : undefined;
   const rc = result ? roomColor(result.winningRoom) : "var(--accent)";
@@ -42,23 +44,23 @@ export function WinnerReveal({ result, wallet, onClose }: WinnerRevealProps) {
               <div className="center-col">
                 <Character mood={iWon ? "cheer" : "idle"} size={120} color={rc} />
               </div>
-              <h2>Room {result.winningRoom} wins!</h2>
+              <h2>Door {result.winningRoom} wins!</h2>
               <div className="reveal-room">{room?.name ?? ""}</div>
 
               {result.rolledOver ? (
                 <p className="reveal-lose">
-                  Nobody picked it — the {formatSol(BigInt(result.poolLamports))} pool rolls
+                  Nobody knocked on it — the {formatEth(BigInt(result.poolLamports))} pool rolls
                   over to next round! 🎲
                 </p>
               ) : iWon ? (
                 <p className="reveal-prize">
-                  You won {formatSol(BigInt(myPayout!.lamports))}! 🎉
+                  You won {formatEth(BigInt(myPayout!.lamports))}! 🎉
                   <br />
                   <span className="hint">
                     {myPayout!.status === "confirmed"
                       ? "Paid to your wallet."
                       : myPayout!.status === "skipped"
-                        ? "(dry-run — no real SOL sent)"
+                        ? "(dry-run — no real ETH sent)"
                         : `status: ${myPayout!.status}`}
                   </span>
                 </p>
@@ -73,7 +75,7 @@ export function WinnerReveal({ result, wallet, onClose }: WinnerRevealProps) {
                 <ul className="reveal-payouts">
                   {result.payouts.map((p) => (
                     <li key={p.wallet} className="mono">
-                      {shortAddress(p.wallet)} — {formatSol(BigInt(p.lamports))}{" "}
+                      {shortAddress(p.wallet)} — {formatEth(BigInt(p.lamports))}{" "}
                       {p.signature ? "✓" : ""}
                     </li>
                   ))}

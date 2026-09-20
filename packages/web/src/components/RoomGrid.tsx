@@ -1,4 +1,4 @@
-import { ROOMS } from "@room-royale/shared";
+import { ROOMS } from "@knock-knock/shared";
 import { LayoutGroup } from "framer-motion";
 import { RoomCard } from "./RoomCard";
 

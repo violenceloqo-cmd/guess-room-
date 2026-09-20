@@ -2,8 +2,9 @@
  * Wire types shared between backend and frontend. These describe what the
  * client is allowed to see; internal engine/DB types may carry more fields.
  *
- * Lamport amounts cross the wire as strings (JSON can't carry BigInt) and are
- * parsed back into BigInt on each side.
+ * Wei amounts cross the wire as strings (JSON can't carry BigInt) and are
+ * parsed back into BigInt on each side. Field names `poolLamports` / `lamports`
+ * are the smallest native unit (wei on Robinhood Chain).
  */
 
 /**
@@ -23,7 +24,7 @@ export interface RoundPublic {
   /** ISO timestamps. */
   startsAt: string;
   endsAt: string;
-  /** Total prize pool for this round, in lamports (string). */
+  /** Total prize pool for this round, in wei (string). */
   poolLamports: string;
   /** Winning room id, null until the round is settled. */
   winningRoom: number | null;
@@ -63,7 +64,10 @@ export interface RoundResultPublic {
 /** Snapshot returned by GET /state and broadcast via realtime. */
 export interface GameStatePublic {
   running: boolean;
+  /** `mainnet` or `testnet` on Robinhood Chain. */
   cluster: string;
+  chainId: number;
+  /** Unused — play is open to any valid wallet. Kept for API compatibility. */
   tokenMint: string | null;
   tokenMinHold: number;
   currentRound: RoundPublic | null;

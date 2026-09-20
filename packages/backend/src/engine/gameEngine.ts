@@ -5,7 +5,7 @@ import {
   type RoundResultPublic,
   type PayoutPublic,
   type RoundStatus,
-} from "@room-royale/shared";
+} from "@knock-knock/shared";
 import { createLogger } from "../util/logger.js";
 import { buildEliminationOrder } from "./rng.js";
 import type {
@@ -233,7 +233,7 @@ export class GameEngine extends EventEmitter {
       config: this.config,
     });
     this.current = round;
-    log.info(`round ${this.roundCounter} open (pool ${pool} lamports)`);
+    log.info(`round ${this.roundCounter} open (pool ${pool} wei)`);
     this.emit("round:open", toRoundPublic(round));
     this.emitState();
     await this.persist((p) => p.insertRound(round));

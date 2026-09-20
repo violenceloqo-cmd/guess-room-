@@ -1,22 +1,24 @@
 import { test, expect } from "vitest";
 import { occupantId, occupantColorIndex } from "./occupant.js";
 
+const WALLET_A = "0x1111111111111111111111111111111111111111";
+const WALLET_B = "0x2222222222222222222222222222222222222222";
+
 test("occupantId is stable for the same wallet", () => {
-  const a = occupantId("3J1UApBqEiSA5M4L2Z4gh1yaXN7CRhGcBQYLCfhSRWpA");
-  const b = occupantId("3J1UApBqEiSA5M4L2Z4gh1yaXN7CRhGcBQYLCfhSRWpA");
-  expect(a).toBe(b);
+  expect(occupantId(WALLET_A)).toBe(occupantId(WALLET_A));
+});
+
+test("occupantId is case-insensitive for EVM checksums", () => {
+  expect(occupantId(WALLET_A)).toBe(occupantId(WALLET_A.toUpperCase()));
 });
 
 test("occupantId differs for different wallets", () => {
-  const a = occupantId("3J1UApBqEiSA5M4L2Z4gh1yaXN7CRhGcBQYLCfhSRWpA");
-  const b = occupantId("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin");
-  expect(a).not.toBe(b);
+  expect(occupantId(WALLET_A)).not.toBe(occupantId(WALLET_B));
 });
 
 test("occupantId does not contain the raw wallet", () => {
-  const wallet = "3J1UApBqEiSA5M4L2Z4gh1yaXN7CRhGcBQYLCfhSRWpA";
-  const id = occupantId(wallet);
-  expect(wallet.includes(id)).toBe(false);
+  const id = occupantId(WALLET_A);
+  expect(WALLET_A.toLowerCase().includes(id)).toBe(false);
   expect(id.length).toBeLessThanOrEqual(8);
 });
 

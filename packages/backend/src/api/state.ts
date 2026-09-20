@@ -1,4 +1,4 @@
-import type { GameStatePublic } from "@room-royale/shared";
+import type { GameStatePublic } from "@knock-knock/shared";
 import type { Env } from "../config/env.js";
 import type { EngineSnapshot } from "../engine/gameEngine.js";
 
@@ -6,9 +6,10 @@ import type { EngineSnapshot } from "../engine/gameEngine.js";
 export function buildGameState(snapshot: EngineSnapshot, env: Env): GameStatePublic {
   return {
     running: snapshot.running,
-    cluster: env.SOLANA_CLUSTER,
-    tokenMint: env.TOKEN_MINT ?? null,
-    tokenMinHold: env.TOKEN_MIN_HOLD,
+    cluster: env.CHAIN_NETWORK,
+    chainId: env.chainId,
+    tokenMint: null,
+    tokenMinHold: 0,
     currentRound: snapshot.currentRound,
     lastResult: snapshot.lastResult,
     serverTime: snapshot.serverTime,

@@ -1,4 +1,4 @@
-import { splitAmongWallets } from "@room-royale/shared";
+import { splitAmongWallets } from "@knock-knock/shared";
 import type {
   Settlement,
   SettlementInput,
@@ -8,7 +8,7 @@ import type {
 /**
  * Pure settlement: splits the pool equally among everyone who picked the
  * winning room, with NO holdings verification and NO real payout. Used for
- * unit tests and dry-run simulation. Phase 3 provides the Solana-backed version.
+ * unit tests and dry-run simulation. Production uses the EVM-backed version.
  */
 export class PureSettlement implements Settlement {
   constructor(private readonly rolloverOnNoWinner: boolean) {}

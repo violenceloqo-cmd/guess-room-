@@ -1,4 +1,4 @@
-import { isValidRoomId, occupantId, ROOM_COUNT, type RoundPublic } from "@room-royale/shared";
+import { isValidRoomId, occupantId, ROOM_COUNT, type RoundPublic } from "@knock-knock/shared";
 import type {
   EngineConfig,
   GuessResult,
